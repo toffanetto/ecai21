@@ -1,0 +1,2 @@
+source;share/teleop_cmd_vel/environment/ament_prefix_path.sh
+source;share/teleop_cmd_vel/environment/path.sh
