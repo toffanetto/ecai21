@@ -3,6 +3,4 @@ Mobile Robots (ECAi21) subject projects
 
 ---
 
-## Dependencies
-
-- `conio.h` library, available in [github.com/zoelabbb/conio.h](github.com/zoelabbb/conio.h)
+- [Exercício 1](https://github.com/toffanetto/ecai21/tree/main/src/teleop_cmd_vel) - Movimentação em n-direções pelo teclado em C++
