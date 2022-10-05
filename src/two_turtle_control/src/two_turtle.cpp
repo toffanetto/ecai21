@@ -31,31 +31,29 @@ class TwoTurtle : public rclcpp::Node{
 			// Definição da qualidade de serviço para a comunicação do tópico		
 			auto default_qos = rclcpp::QoS(rclcpp::SystemDefaultsQoS());
 
-      /* CHAMAR SERVIÇO DE SPAW DA TURTLE2 */
+			turtle_spawn = this->create_client<turtlesim::srv::Spawn>("spawn");
+			auto new_turtle = std::make_shared<turtlesim::srv::Spawn::Request>();
+			new_turtle->x = 1.0;
+			new_turtle->y = 1.0;
+			new_turtle->theta = 0.0;
+			new_turtle->name = "turtle2";
 
-      turtle_spawn = this->create_client<turtlesim::srv::Spawn>("spawn");
-      auto new_turtle = std::make_shared<turtlesim::srv::Spawn::Request>();
-      new_turtle->x = 1.0;
-      new_turtle->y = 1.0;
-      new_turtle->theta = 0.0;
-      new_turtle->name = "turtle2";
+			while (!turtle_spawn->wait_for_service(1s)) {
+				RCLCPP_INFO(this->get_logger(), "Waiting for /spawn service");
+			}
 
-      while (!turtle_spawn->wait_for_service(1s)) {
-        RCLCPP_INFO(this->get_logger(), "Waiting for /spawn service");
-      }
-    
-      auto result = turtle_spawn->async_send_request(new_turtle);
+			auto result = turtle_spawn->async_send_request(new_turtle);
 
 			// Instanciação do publisher do tópico cmd_vel, com mensagem do tipo Twist
 			cmd_pub = this->create_publisher<geometry_msgs::msg::Twist>("turtle2/cmd_vel", default_qos);
 
-      pose_1_sub = this->create_subscription<turtlesim::msg::Pose>(
-                                "/turtle1/pose", default_qos, 
-                                std::bind(&TwoTurtle::pose_1_callback, this, _1));
+			pose_1_sub = this->create_subscription<turtlesim::msg::Pose>(
+								"/turtle1/pose", default_qos, 
+								std::bind(&TwoTurtle::pose_1_callback, this, _1));
 
-      pose_2_sub = this->create_subscription<turtlesim::msg::Pose>(
-                                "/turtle2/pose", default_qos, 
-                                std::bind(&TwoTurtle::pose_2_callback, this, _1));
+			pose_2_sub = this->create_subscription<turtlesim::msg::Pose>(
+								"/turtle2/pose", default_qos, 
+								std::bind(&TwoTurtle::pose_2_callback, this, _1));
 
 			RCLCPP_INFO(this->get_logger(), "ECAi21 | Two Turtle");
 		}
@@ -69,37 +67,37 @@ class TwoTurtle : public rclcpp::Node{
 		void pose_1_callback(const turtlesim::msg::Pose::SharedPtr target1);
 		void pose_2_callback(const turtlesim::msg::Pose::SharedPtr target2);
 		void follow_turtle();
-    void show_pose();
-    double linear_error();
-    double yaw_error();
-    double orientation_error();
-    double modulo(const turtlesim::msg::Pose::SharedPtr target);
-    double produto_interno(const turtlesim::msg::Pose::SharedPtr target1,const turtlesim::msg::Pose::SharedPtr target2);
+		void show_pose();
+		double linear_error();
+		double yaw_error();
+		double orientation_error();
+		double modulo(const turtlesim::msg::Pose::SharedPtr target);
+		double produto_interno(const turtlesim::msg::Pose::SharedPtr target1,const turtlesim::msg::Pose::SharedPtr target2);
 
 		// Declaração do publisher
 		rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr cmd_pub;
-    rclcpp::Subscription<turtlesim::msg::Pose>::SharedPtr pose_1_sub;
-    rclcpp::Subscription<turtlesim::msg::Pose>::SharedPtr pose_2_sub;
-    rclcpp::Client<turtlesim::srv::Spawn>::SharedPtr turtle_spawn;
+		rclcpp::Subscription<turtlesim::msg::Pose>::SharedPtr pose_1_sub;
+		rclcpp::Subscription<turtlesim::msg::Pose>::SharedPtr pose_2_sub;
+		rclcpp::Client<turtlesim::srv::Spawn>::SharedPtr turtle_spawn;
 
-    turtlesim::msg::Pose::SharedPtr turtle1_pose;
-    turtlesim::msg::Pose::SharedPtr turtle2_pose;
+		turtlesim::msg::Pose::SharedPtr turtle1_pose;
+		turtlesim::msg::Pose::SharedPtr turtle2_pose;
 
-    bool pose_1_sub_ok = false;
-    bool pose_2_sub_ok = false;
+		bool pose_1_sub_ok = false;
+		bool pose_2_sub_ok = false;
 };
 
 void TwoTurtle::show_pose(){
-  std::cout << "|++++++++++Turtle 1+++++++++|" << std::endl;
-  std::cout << "|    x: " << turtle1_pose->x << std::endl;
-  std::cout << "|    y: " << turtle1_pose->y << std::endl;
-  std::cout << "|theta: " << turtle1_pose->theta << std::endl;
-  std::cout << "|+++++++++++++++++++++++++++|" << std::endl << std::endl;
-  std::cout << "|++++++++++Turtle 2+++++++++|" << std::endl;
-  std::cout << "|    x: " << turtle2_pose->x << std::endl;
-  std::cout << "|    y: " << turtle2_pose->y << std::endl;
-  std::cout << "|theta: " << turtle2_pose->theta << std::endl;
-  std::cout << "|+++++++++++++++++++++++++++|" << std::endl << std::endl;
+	std::cout << "|++++++++++Turtle 1+++++++++|" << std::endl;
+	std::cout << "|    x: " << turtle1_pose->x << std::endl;
+	std::cout << "|    y: " << turtle1_pose->y << std::endl;
+	std::cout << "|theta: " << turtle1_pose->theta << std::endl;
+	std::cout << "|+++++++++++++++++++++++++++|" << std::endl << std::endl;
+	std::cout << "|++++++++++Turtle 2+++++++++|" << std::endl;
+	std::cout << "|    x: " << turtle2_pose->x << std::endl;
+	std::cout << "|    y: " << turtle2_pose->y << std::endl;
+	std::cout << "|theta: " << turtle2_pose->theta << std::endl;
+	std::cout << "|+++++++++++++++++++++++++++|" << std::endl << std::endl;
 }
 
 double TwoTurtle::linear_error(){
@@ -133,10 +131,10 @@ double TwoTurtle::yaw_error(){
     double error = abs(yaw_target - theta);
 
     if(yaw_target > theta && error > M_PI){
-      error = -error;
+    	error = -error;
     }
     if(yaw_target < theta && error < M_PI){
-      error = -error;
+    	error = -error;
     }
 
     return error;
@@ -151,58 +149,56 @@ double TwoTurtle::orientation_error(){
     double error = abs(yaw_target - theta);
 
     if(yaw_target > theta && error > M_PI){
-      error = -error;
+    	error = -error;
     }
     if(yaw_target < theta && error < M_PI){
-      error = -error;
+    	error = -error;
     }
 
     return error;
 }
 
 void TwoTurtle::pose_1_callback(const turtlesim::msg::Pose::SharedPtr target1){
-  pose_1_sub_ok = true;
-  turtle1_pose = target1;
+	pose_1_sub_ok = true;
+	turtle1_pose = target1;
 
-  if(pose_1_sub_ok && pose_2_sub_ok)
-    this->follow_turtle();
+	if(pose_1_sub_ok && pose_2_sub_ok)
+		this->follow_turtle();
 }
 
 void TwoTurtle::pose_2_callback(const turtlesim::msg::Pose::SharedPtr target2){
-  pose_2_sub_ok = true;
-  turtle2_pose = target2;
+	pose_2_sub_ok = true;
+	turtle2_pose = target2;
 
-  if(pose_1_sub_ok && pose_2_sub_ok)
-    this->follow_turtle();
+	if(pose_1_sub_ok && pose_2_sub_ok)
+		this->follow_turtle();
 }
 
 void TwoTurtle::follow_turtle(){
-  pose_1_sub_ok = pose_2_sub_ok = false;
+	pose_1_sub_ok = pose_2_sub_ok = false;
 
-  auto cmd_msg = std::make_unique<geometry_msgs::msg::Twist>();
-  double linear_speed = 0;
-  double angular_speed = 0;
+	auto cmd_msg = std::make_unique<geometry_msgs::msg::Twist>();
+	double linear_speed = 0;
+	double angular_speed = 0;
 
-  // control law
+	// control law
 
-  if(this->linear_error() > 0.1){
+	if(this->linear_error() > 0.1){
+		linear_speed = this->linear_error()*Kp_L;
+		angular_speed = this->yaw_error()*Kp_A;
+	}
+	else if(abs(this->orientation_error()) > 0.01){
+		linear_speed = 0;
+		angular_speed = this->orientation_error()*Kp_A;
+	}
 
-    linear_speed = this->linear_error()*Kp_L;
-
-    angular_speed = this->yaw_error()*Kp_A;
-  }
-  else if(abs(this->orientation_error()) > 0.01){
-    linear_speed = 0;
-    angular_speed = this->orientation_error()*Kp_A;
-  }
-
-  cmd_msg->linear.x = (abs(linear_speed) > LINEAR_SPEED_MAX) ? copysign(LINEAR_SPEED_MAX,linear_speed) : linear_speed;
-  cmd_msg->angular.z = (abs(angular_speed) > ANGULAR_SPEED_MAX) ? copysign(ANGULAR_SPEED_MAX,angular_speed) : angular_speed;
+	cmd_msg->linear.x = (abs(linear_speed) > LINEAR_SPEED_MAX) ? copysign(LINEAR_SPEED_MAX,linear_speed) : linear_speed;
+	cmd_msg->angular.z = (abs(angular_speed) > ANGULAR_SPEED_MAX) ? copysign(ANGULAR_SPEED_MAX,angular_speed) : angular_speed;
 
 
-  cmd_pub->publish(std::move(cmd_msg));
+	cmd_pub->publish(std::move(cmd_msg));
 
-  show_pose();
+	show_pose();
 }
 
 int main(int argc, char ** argv){
