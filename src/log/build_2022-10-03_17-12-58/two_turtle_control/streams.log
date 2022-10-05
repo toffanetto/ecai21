@@ -1,0 +1,12 @@
+[0.013s] Invoking command in '/home/toffanetto/ecai21/src/build/two_turtle_control': CMAKE_PREFIX_PATH=/opt/ros/foxy /usr/bin/cmake --build /home/toffanetto/ecai21/src/build/two_turtle_control -- -j12 -l12
+[0.054s] [35m[1mScanning dependencies of target two_turtle[0m
+[0.081s] [ 50%] [32mBuilding CXX object CMakeFiles/two_turtle.dir/src/two_turtle.cpp.o[0m
+[1.112s] [01m[K/home/toffanetto/ecai21/src/two_turtle_control/src/two_turtle.cpp:[m[K In member function ‘[01m[Kvoid TwoTurtle::pose_2_callback(turtlesim::msg::Pose_<std::allocator<void> >::SharedPtr)[m[K’:
+[1.112s] [01m[K/home/toffanetto/ecai21/src/two_turtle_control/src/two_turtle.cpp:74:3:[m[K [01;31m[Kerror: [m[K‘[01m[Khis[m[K’ was not declared in this scope; did you mean ‘[01m[Kthis[m[K’?
+[1.112s]    74 |   [01;31m[Khis[m[K->follow_turtle();
+[1.112s]       |   [01;31m[K^~~[m[K
+[1.112s]       |   [32m[Kthis[m[K
+[2.353s] make[2]: *** [CMakeFiles/two_turtle.dir/build.make:63: CMakeFiles/two_turtle.dir/src/two_turtle.cpp.o] Error 1
+[2.353s] make[1]: *** [CMakeFiles/Makefile2:78: CMakeFiles/two_turtle.dir/all] Error 2
+[2.353s] make: *** [Makefile:141: all] Error 2
+[2.355s] Invoked command in '/home/toffanetto/ecai21/src/build/two_turtle_control' returned '2': CMAKE_PREFIX_PATH=/opt/ros/foxy /usr/bin/cmake --build /home/toffanetto/ecai21/src/build/two_turtle_control -- -j12 -l12

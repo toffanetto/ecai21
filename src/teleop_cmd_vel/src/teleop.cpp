@@ -24,7 +24,7 @@ class Teleop : public rclcpp::Node{
 			auto default_qos = rclcpp::QoS(rclcpp::SystemDefaultsQoS());
 
 			// Instanciação do publisher do tópico cmd_vel, com mensagem do tipo Twist
-			cmd_pub = this->create_publisher<geometry_msgs::msg::Twist>("cmd_vel", default_qos);
+			cmd_pub = this->create_publisher<geometry_msgs::msg::Twist>("turtle1/cmd_vel", default_qos);
 
 			// Instanciação do timer para criação de base de tempo para leitura do teclado e publicação das mensagens
 			// chamando a função readKey_callback()

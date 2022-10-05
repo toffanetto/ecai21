@@ -1,0 +1,26 @@
+[35m[1mScanning dependencies of target two_turtle[0m
+[ 50%] [32mBuilding CXX object CMakeFiles/two_turtle.dir/src/two_turtle.cpp.o[0m
+[01m[K/home/toffanetto/ecai21/src/two_turtle_control/src/two_turtle.cpp:[m[K In member function ‘[01m[Kvoid TwoTurtle::pose_callback(turtlesim::msg::Pose_<std::allocator<void> >::SharedPtr)[m[K’:
+[01m[K/home/toffanetto/ecai21/src/two_turtle_control/src/two_turtle.cpp:41:60:[m[K [01;35m[Kwarning: [m[Kunused parameter ‘[01m[Ktarget[m[K’ [[01;35m[K-Wunused-parameter[m[K]
+   41 |   void pose_callback([01;35m[Kconst turtlesim::msg::Pose::SharedPtr target[m[K){
+      |                      [01;35m[K~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~[m[K
+[100%] [32m[1mLinking CXX executable two_turtle[0m
+[100%] Built target two_turtle
+-- Install configuration: ""
+-- Installing: /home/toffanetto/ecai21/src/install/two_turtle_control/lib/two_turtle_control/two_turtle
+-- Set runtime path of "/home/toffanetto/ecai21/src/install/two_turtle_control/lib/two_turtle_control/two_turtle" to ""
+-- Installing: /home/toffanetto/ecai21/src/install/two_turtle_control/share/ament_index/resource_index/package_run_dependencies/two_turtle_control
+-- Installing: /home/toffanetto/ecai21/src/install/two_turtle_control/share/ament_index/resource_index/parent_prefix_path/two_turtle_control
+-- Installing: /home/toffanetto/ecai21/src/install/two_turtle_control/share/two_turtle_control/environment/ament_prefix_path.sh
+-- Installing: /home/toffanetto/ecai21/src/install/two_turtle_control/share/two_turtle_control/environment/ament_prefix_path.dsv
+-- Installing: /home/toffanetto/ecai21/src/install/two_turtle_control/share/two_turtle_control/environment/path.sh
+-- Installing: /home/toffanetto/ecai21/src/install/two_turtle_control/share/two_turtle_control/environment/path.dsv
+-- Installing: /home/toffanetto/ecai21/src/install/two_turtle_control/share/two_turtle_control/local_setup.bash
+-- Installing: /home/toffanetto/ecai21/src/install/two_turtle_control/share/two_turtle_control/local_setup.sh
+-- Installing: /home/toffanetto/ecai21/src/install/two_turtle_control/share/two_turtle_control/local_setup.zsh
+-- Installing: /home/toffanetto/ecai21/src/install/two_turtle_control/share/two_turtle_control/local_setup.dsv
+-- Installing: /home/toffanetto/ecai21/src/install/two_turtle_control/share/two_turtle_control/package.dsv
+-- Installing: /home/toffanetto/ecai21/src/install/two_turtle_control/share/ament_index/resource_index/packages/two_turtle_control
+-- Installing: /home/toffanetto/ecai21/src/install/two_turtle_control/share/two_turtle_control/cmake/two_turtle_controlConfig.cmake
+-- Installing: /home/toffanetto/ecai21/src/install/two_turtle_control/share/two_turtle_control/cmake/two_turtle_controlConfig-version.cmake
+-- Installing: /home/toffanetto/ecai21/src/install/two_turtle_control/share/two_turtle_control/package.xml

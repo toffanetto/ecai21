@@ -1,0 +1,111 @@
+[35m[1mScanning dependencies of target two_turtle[0m
+[ 50%] [32mBuilding CXX object CMakeFiles/two_turtle.dir/src/two_turtle.cpp.o[0m
+[01m[K/home/toffanetto/ecai21/src/two_turtle_control/src/two_turtle.cpp:64:31:[m[K [01;31m[Kerror: [m[K‘[01m[Ksrv[m[K’ is not a member of ‘[01m[Kturtlesim[m[K’; did you mean ‘[01m[Krcl_interfaces::srv[m[K’?
+   64 |     rclcpp::Client<turtlesim::[01;31m[Ksrv[m[K::Spawn>::SharedPtr turtle_spawn;
+      |                               [01;31m[K^~~[m[K
+In file included from [01m[K/opt/ros/foxy/include/rcl_interfaces/srv/describe_parameters.hpp:7[m[K,
+                 from [01m[K/opt/ros/foxy/include/rclcpp/parameter_client.hpp:26[m[K,
+                 from [01m[K/opt/ros/foxy/include/rclcpp/rclcpp.hpp:151[m[K,
+                 from [01m[K/home/toffanetto/ecai21/src/two_turtle_control/src/two_turtle.cpp:6[m[K:
+[01m[K/opt/ros/foxy/include/rcl_interfaces/srv/detail/describe_parameters__struct.hpp:26:11:[m[K [01;36m[Knote: [m[K‘[01m[Krcl_interfaces::srv[m[K’ declared here
+   26 | namespace [01;36m[Ksrv[m[K
+      |           [01;36m[K^~~[m[K
+[01m[K/home/toffanetto/ecai21/src/two_turtle_control/src/two_turtle.cpp:64:31:[m[K [01;31m[Kerror: [m[K‘[01m[Ksrv[m[K’ is not a member of ‘[01m[Kturtlesim[m[K’; did you mean ‘[01m[Krcl_interfaces::srv[m[K’?
+   64 |     rclcpp::Client<turtlesim::[01;31m[Ksrv[m[K::Spawn>::SharedPtr turtle_spawn;
+      |                               [01;31m[K^~~[m[K
+In file included from [01m[K/opt/ros/foxy/include/rcl_interfaces/srv/describe_parameters.hpp:7[m[K,
+                 from [01m[K/opt/ros/foxy/include/rclcpp/parameter_client.hpp:26[m[K,
+                 from [01m[K/opt/ros/foxy/include/rclcpp/rclcpp.hpp:151[m[K,
+                 from [01m[K/home/toffanetto/ecai21/src/two_turtle_control/src/two_turtle.cpp:6[m[K:
+[01m[K/opt/ros/foxy/include/rcl_interfaces/srv/detail/describe_parameters__struct.hpp:26:11:[m[K [01;36m[Knote: [m[K‘[01m[Krcl_interfaces::srv[m[K’ declared here
+   26 | namespace [01;36m[Ksrv[m[K
+      |           [01;36m[K^~~[m[K
+[01m[K/home/toffanetto/ecai21/src/two_turtle_control/src/two_turtle.cpp:64:41:[m[K [01;31m[Kerror: [m[Ktemplate argument 1 is invalid
+   64 |     rclcpp::Client<turtlesim::srv::Spawn[01;31m[K>[m[K::SharedPtr turtle_spawn;
+      |                                         [01;31m[K^[m[K
+[01m[K/home/toffanetto/ecai21/src/two_turtle_control/src/two_turtle.cpp:64:44:[m[K [01;31m[Kerror: [m[Kexpected ‘[01m[K;[m[K’ at end of member declaration
+   64 |     rclcpp::Client<turtlesim::srv::Spawn>::[01;31m[KSharedPtr[m[K turtle_spawn;
+      |                                            [01;31m[K^~~~~~~~~[m[K
+      |                                                     [32m[K;[m[K
+[01m[K/home/toffanetto/ecai21/src/two_turtle_control/src/two_turtle.cpp:64:54:[m[K [01;31m[Kerror: [m[K‘[01m[Kturtle_spawn[m[K’ does not name a type
+   64 |     rclcpp::Client<turtlesim::srv::Spawn>::SharedPtr [01;31m[Kturtle_spawn[m[K;
+      |                                                      [01;31m[K^~~~~~~~~~~~[m[K
+[01m[K/home/toffanetto/ecai21/src/two_turtle_control/src/two_turtle.cpp:[m[K In constructor ‘[01m[KTwoTurtle::TwoTurtle()[m[K’:
+[01m[K/home/toffanetto/ecai21/src/two_turtle_control/src/two_turtle.cpp:27:7:[m[K [01;31m[Kerror: [m[K‘[01m[Kturtle_spawn[m[K’ was not declared in this scope
+   27 |       [01;31m[Kturtle_spawn[m[K = this->create_client<turtlesim::srv::Spawn>("spawn");
+      |       [01;31m[K^~~~~~~~~~~~[m[K
+[01m[K/home/toffanetto/ecai21/src/two_turtle_control/src/two_turtle.cpp:27:53:[m[K [01;31m[Kerror: [m[K‘[01m[Ksrv[m[K’ is not a member of ‘[01m[Kturtlesim[m[K’; did you mean ‘[01m[Krcl_interfaces::srv[m[K’?
+   27 |       turtle_spawn = this->create_client<turtlesim::[01;31m[Ksrv[m[K::Spawn>("spawn");
+      |                                                     [01;31m[K^~~[m[K
+In file included from [01m[K/opt/ros/foxy/include/rcl_interfaces/srv/describe_parameters.hpp:7[m[K,
+                 from [01m[K/opt/ros/foxy/include/rclcpp/parameter_client.hpp:26[m[K,
+                 from [01m[K/opt/ros/foxy/include/rclcpp/rclcpp.hpp:151[m[K,
+                 from [01m[K/home/toffanetto/ecai21/src/two_turtle_control/src/two_turtle.cpp:6[m[K:
+[01m[K/opt/ros/foxy/include/rcl_interfaces/srv/detail/describe_parameters__struct.hpp:26:11:[m[K [01;36m[Knote: [m[K‘[01m[Krcl_interfaces::srv[m[K’ declared here
+   26 | namespace [01;36m[Ksrv[m[K
+      |           [01;36m[K^~~[m[K
+[01m[K/home/toffanetto/ecai21/src/two_turtle_control/src/two_turtle.cpp:27:53:[m[K [01;31m[Kerror: [m[K‘[01m[Ksrv[m[K’ is not a member of ‘[01m[Kturtlesim[m[K’; did you mean ‘[01m[Krcl_interfaces::srv[m[K’?
+   27 |       turtle_spawn = this->create_client<turtlesim::[01;31m[Ksrv[m[K::Spawn>("spawn");
+      |                                                     [01;31m[K^~~[m[K
+In file included from [01m[K/opt/ros/foxy/include/rcl_interfaces/srv/describe_parameters.hpp:7[m[K,
+                 from [01m[K/opt/ros/foxy/include/rclcpp/parameter_client.hpp:26[m[K,
+                 from [01m[K/opt/ros/foxy/include/rclcpp/rclcpp.hpp:151[m[K,
+                 from [01m[K/home/toffanetto/ecai21/src/two_turtle_control/src/two_turtle.cpp:6[m[K:
+[01m[K/opt/ros/foxy/include/rcl_interfaces/srv/detail/describe_parameters__struct.hpp:26:11:[m[K [01;36m[Knote: [m[K‘[01m[Krcl_interfaces::srv[m[K’ declared here
+   26 | namespace [01;36m[Ksrv[m[K
+      |           [01;36m[K^~~[m[K
+[01m[K/home/toffanetto/ecai21/src/two_turtle_control/src/two_turtle.cpp:27:28:[m[K [01;31m[Kerror: [m[Kparse error in template argument list
+   27 |       turtle_spawn = this->[01;31m[Kcreate_client<turtlesim::srv::Spawn>[m[K("spawn");
+      |                            [01;31m[K^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[m[K
+[01m[K/home/toffanetto/ecai21/src/two_turtle_control/src/two_turtle.cpp:27:72:[m[K [01;31m[Kerror: [m[Kno matching function for call to ‘[01m[KTwoTurtle::create_client<<expression error> >(const char [6])[m[K’
+   27 |       turtle_spawn = this->create_client<turtlesim::srv::Spawn>("spawn"[01;31m[K)[m[K;
+      |                                                                        [01;31m[K^[m[K
+In file included from [01m[K/opt/ros/foxy/include/rclcpp/executors/single_threaded_executor.hpp:28[m[K,
+                 from [01m[K/opt/ros/foxy/include/rclcpp/executors.hpp:22[m[K,
+                 from [01m[K/opt/ros/foxy/include/rclcpp/rclcpp.hpp:146[m[K,
+                 from [01m[K/home/toffanetto/ecai21/src/two_turtle_control/src/two_turtle.cpp:6[m[K:
+[01m[K/opt/ros/foxy/include/rclcpp/node.hpp:246:3:[m[K [01;36m[Knote: [m[Kcandidate: ‘[01m[Ktemplate<class ServiceT> typename rclcpp::Client<ServiceT>::SharedPtr rclcpp::Node::create_client(const string&, const rmw_qos_profile_t&, rclcpp::CallbackGroup::SharedPtr)[m[K’
+  246 |   [01;36m[Kcreate_client[m[K(
+      |   [01;36m[K^~~~~~~~~~~~~[m[K
+[01m[K/opt/ros/foxy/include/rclcpp/node.hpp:246:3:[m[K [01;36m[Knote: [m[K  template argument deduction/substitution failed:
+[01m[K/home/toffanetto/ecai21/src/two_turtle_control/src/two_turtle.cpp:27:72:[m[K [01;31m[Kerror: [m[Ktemplate argument 1 is invalid
+   27 |       turtle_spawn = this->create_client<turtlesim::srv::Spawn>("spawn"[01;31m[K)[m[K;
+      |                                                                        [01;31m[K^[m[K
+[01m[K/home/toffanetto/ecai21/src/two_turtle_control/src/two_turtle.cpp:28:53:[m[K [01;31m[Kerror: [m[K‘[01m[Ksrv[m[K’ is not a member of ‘[01m[Kturtlesim[m[K’; did you mean ‘[01m[Krcl_interfaces::srv[m[K’?
+   28 |       auto new_turtle = std::make_shared<turtlesim::[01;31m[Ksrv[m[K::Spawn::Request>();
+      |                                                     [01;31m[K^~~[m[K
+In file included from [01m[K/opt/ros/foxy/include/rcl_interfaces/srv/describe_parameters.hpp:7[m[K,
+                 from [01m[K/opt/ros/foxy/include/rclcpp/parameter_client.hpp:26[m[K,
+                 from [01m[K/opt/ros/foxy/include/rclcpp/rclcpp.hpp:151[m[K,
+                 from [01m[K/home/toffanetto/ecai21/src/two_turtle_control/src/two_turtle.cpp:6[m[K:
+[01m[K/opt/ros/foxy/include/rcl_interfaces/srv/detail/describe_parameters__struct.hpp:26:11:[m[K [01;36m[Knote: [m[K‘[01m[Krcl_interfaces::srv[m[K’ declared here
+   26 | namespace [01;36m[Ksrv[m[K
+      |           [01;36m[K^~~[m[K
+[01m[K/home/toffanetto/ecai21/src/two_turtle_control/src/two_turtle.cpp:28:53:[m[K [01;31m[Kerror: [m[K‘[01m[Ksrv[m[K’ is not a member of ‘[01m[Kturtlesim[m[K’; did you mean ‘[01m[Krcl_interfaces::srv[m[K’?
+   28 |       auto new_turtle = std::make_shared<turtlesim::[01;31m[Ksrv[m[K::Spawn::Request>();
+      |                                                     [01;31m[K^~~[m[K
+In file included from [01m[K/opt/ros/foxy/include/rcl_interfaces/srv/describe_parameters.hpp:7[m[K,
+                 from [01m[K/opt/ros/foxy/include/rclcpp/parameter_client.hpp:26[m[K,
+                 from [01m[K/opt/ros/foxy/include/rclcpp/rclcpp.hpp:151[m[K,
+                 from [01m[K/home/toffanetto/ecai21/src/two_turtle_control/src/two_turtle.cpp:6[m[K:
+[01m[K/opt/ros/foxy/include/rcl_interfaces/srv/detail/describe_parameters__struct.hpp:26:11:[m[K [01;36m[Knote: [m[K‘[01m[Krcl_interfaces::srv[m[K’ declared here
+   26 | namespace [01;36m[Ksrv[m[K
+      |           [01;36m[K^~~[m[K
+[01m[K/home/toffanetto/ecai21/src/two_turtle_control/src/two_turtle.cpp:28:30:[m[K [01;31m[Kerror: [m[Kparse error in template argument list
+   28 |       auto new_turtle = std::[01;31m[Kmake_shared<turtlesim::srv::Spawn::Request>[m[K();
+      |                              [01;31m[K^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[m[K
+[01m[K/home/toffanetto/ecai21/src/two_turtle_control/src/two_turtle.cpp:28:74:[m[K [01;31m[Kerror: [m[Kno matching function for call to ‘[01m[Kmake_shared<<expression error> >()[m[K’
+   28 |       auto new_turtle = std::make_shared<turtlesim::srv::Spawn::Request>([01;31m[K)[m[K;
+      |                                                                          [01;31m[K^[m[K
+In file included from [01m[K/usr/include/c++/9/memory:81[m[K,
+                 from [01m[K/home/toffanetto/ecai21/src/two_turtle_control/src/two_turtle.cpp:2[m[K:
+[01m[K/usr/include/c++/9/bits/shared_ptr.h:714:5:[m[K [01;36m[Knote: [m[Kcandidate: ‘[01m[Ktemplate<class _Tp, class ... _Args> std::shared_ptr<_Tp> std::make_shared(_Args&& ...)[m[K’
+  714 |     [01;36m[Kmake_shared[m[K(_Args&&... __args)
+      |     [01;36m[K^~~~~~~~~~~[m[K
+[01m[K/usr/include/c++/9/bits/shared_ptr.h:714:5:[m[K [01;36m[Knote: [m[K  template argument deduction/substitution failed:
+[01m[K/home/toffanetto/ecai21/src/two_turtle_control/src/two_turtle.cpp:28:74:[m[K [01;31m[Kerror: [m[Ktemplate argument 1 is invalid
+   28 |       auto new_turtle = std::make_shared<turtlesim::srv::Spawn::Request>([01;31m[K)[m[K;
+      |                                                                          [01;31m[K^[m[K
+make[2]: *** [CMakeFiles/two_turtle.dir/build.make:63: CMakeFiles/two_turtle.dir/src/two_turtle.cpp.o] Error 1
+make[1]: *** [CMakeFiles/Makefile2:78: CMakeFiles/two_turtle.dir/all] Error 2
+make: *** [Makefile:141: all] Error 2

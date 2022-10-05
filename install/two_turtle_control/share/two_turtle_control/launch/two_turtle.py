@@ -17,7 +17,15 @@ def generate_launch_description():
             name='turtlesim'
     )
 
+    two_turtle_node = Node(
+                package='two_turtle_control',
+                executable='two_turtle',
+                name='two_turtle',
+                output='screen'
+    )
+
     return LaunchDescription([
             teleop_node,
-            turtlesim_node
+            turtlesim_node,
+            two_turtle_node
         ])
