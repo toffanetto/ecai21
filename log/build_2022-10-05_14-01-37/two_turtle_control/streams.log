@@ -1,0 +1,35 @@
+[0.014s] Invoking command in '/home/toffanetto/ecai21/build/two_turtle_control': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/foxy /usr/bin/cmake --build /home/toffanetto/ecai21/build/two_turtle_control -- -j12 -l12
+[0.057s] [35m[1mScanning dependencies of target two_turtle[0m
+[0.090s] [ 50%] [32mBuilding CXX object CMakeFiles/two_turtle.dir/src/two_turtle.cpp.o[0m
+[1.171s] [01m[K/home/toffanetto/ecai21/src/two_turtle_control/src/two_turtle.cpp:[m[K In member function ‘[01m[Kdouble TwoTurtle::yaw_error()[m[K’:
+[1.171s] [01m[K/home/toffanetto/ecai21/src/two_turtle_control/src/two_turtle.cpp:115:33:[m[K [01;31m[Kerror: [m[Kcannot convert ‘[01m[Kturtlesim::msg::Pose_<std::allocator<void> >::UniquePtr[m[K’ {aka ‘[01m[Kstd::unique_ptr<turtlesim::msg::Pose_<std::allocator<void> >, std::default_delete<turtlesim::msg::Pose_<std::allocator<void> > > >[m[K’} to ‘[01m[Kturtlesim::msg::Pose_<std::allocator<void> >::SharedPtr[m[K’ {aka ‘[01m[Kstd::shared_ptr<turtlesim::msg::Pose_<std::allocator<void> > >[m[K’}
+[1.172s]   115 |     double yaw_target = (modulo([01;31m[Kturtle1_pose_0[m[K)==0) ? 0 : copysign(acos(produto_interno(turtle2_pose,turtle1_pose_0)/modulo(turtle1_pose_0)),turtle1_pose_0->y);
+[1.172s]       |                                 [01;31m[K^~~~~~~~~~~~~~[m[K
+[1.172s]       |                                 [01;31m[K|[m[K
+[1.172s]       |                                 [01;31m[Kturtlesim::msg::Pose_<std::allocator<void> >::UniquePtr {aka std::unique_ptr<turtlesim::msg::Pose_<std::allocator<void> >, std::default_delete<turtlesim::msg::Pose_<std::allocator<void> > > >}[m[K
+[1.172s] [01m[K/home/toffanetto/ecai21/src/two_turtle_control/src/two_turtle.cpp:96:64:[m[K [01;36m[Knote: [m[K  initializing argument 1 of ‘[01m[Kdouble TwoTurtle::modulo(turtlesim::msg::Pose_<std::allocator<void> >::SharedPtr)[m[K’
+[1.172s]    96 | double TwoTurtle::modulo([01;36m[Kconst turtlesim::msg::Pose::SharedPtr target[m[K){
+[1.172s]       |                          [01;36m[K~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~[m[K
+[1.172s] [01m[K/home/toffanetto/ecai21/src/two_turtle_control/src/two_turtle.cpp:115:102:[m[K [01;31m[Kerror: [m[Kcannot convert ‘[01m[Kturtlesim::msg::Pose_<std::allocator<void> >::UniquePtr[m[K’ {aka ‘[01m[Kstd::unique_ptr<turtlesim::msg::Pose_<std::allocator<void> >, std::default_delete<turtlesim::msg::Pose_<std::allocator<void> > > >[m[K’} to ‘[01m[Kturtlesim::msg::Pose_<std::allocator<void> >::SharedPtr[m[K’ {aka ‘[01m[Kstd::shared_ptr<turtlesim::msg::Pose_<std::allocator<void> > >[m[K’}
+[1.172s]   115 | se_0)==0) ? 0 : copysign(acos(produto_interno(turtle2_pose,[01;31m[Kturtle1_pose_0[m[K)/modulo(turtle1_pose_0)),turtle1_pose_0->y);
+[1.172s]       |                                                            [01;31m[K^~~~~~~~~~~~~~[m[K
+[1.172s]       |                                                            [01;31m[K|[m[K
+[1.172s]       |                                                            [01;31m[Kturtlesim::msg::Pose_<std::allocator<void> >::UniquePtr {aka std::unique_ptr<turtlesim::msg::Pose_<std::allocator<void> >, std::default_delete<turtlesim::msg::Pose_<std::allocator<void> > > >}[m[K
+[1.172s] 
+[1.172s] [01m[K/home/toffanetto/ecai21/src/two_turtle_control/src/two_turtle.cpp:101:119:[m[K [01;36m[Knote: [m[K  initializing argument 2 of ‘[01m[Kdouble TwoTurtle::produto_interno(turtlesim::msg::Pose_<std::allocator<void> >::SharedPtr, turtlesim::msg::Pose_<std::allocator<void> >::SharedPtr)[m[K’
+[1.172s]   101 | :msg::Pose::SharedPtr target1,[01;36m[Kconst turtlesim::msg::Pose::SharedPtr target2[m[K){
+[1.173s]       |                               [01;36m[K~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~[m[K
+[1.173s] 
+[1.173s] [01m[K/home/toffanetto/ecai21/src/two_turtle_control/src/two_turtle.cpp:115:125:[m[K [01;31m[Kerror: [m[Kcannot convert ‘[01m[Kturtlesim::msg::Pose_<std::allocator<void> >::UniquePtr[m[K’ {aka ‘[01m[Kstd::unique_ptr<turtlesim::msg::Pose_<std::allocator<void> >, std::default_delete<turtlesim::msg::Pose_<std::allocator<void> > > >[m[K’} to ‘[01m[Kturtlesim::msg::Pose_<std::allocator<void> >::SharedPtr[m[K’ {aka ‘[01m[Kstd::shared_ptr<turtlesim::msg::Pose_<std::allocator<void> > >[m[K’}
+[1.173s]   115 | n(acos(produto_interno(turtle2_pose,turtle1_pose_0)/modulo([01;31m[Kturtle1_pose_0[m[K)),turtle1_pose_0->y);
+[1.173s]       |                                                            [01;31m[K^~~~~~~~~~~~~~[m[K
+[1.173s]       |                                                            [01;31m[K|[m[K
+[1.173s]       |                                                            [01;31m[Kturtlesim::msg::Pose_<std::allocator<void> >::UniquePtr {aka std::unique_ptr<turtlesim::msg::Pose_<std::allocator<void> >, std::default_delete<turtlesim::msg::Pose_<std::allocator<void> > > >}[m[K
+[1.173s] 
+[1.173s] [01m[K/home/toffanetto/ecai21/src/two_turtle_control/src/two_turtle.cpp:96:64:[m[K [01;36m[Knote: [m[K  initializing argument 1 of ‘[01m[Kdouble TwoTurtle::modulo(turtlesim::msg::Pose_<std::allocator<void> >::SharedPtr)[m[K’
+[1.173s]    96 | double TwoTurtle::modulo([01;36m[Kconst turtlesim::msg::Pose::SharedPtr target[m[K){
+[1.173s]       |                          [01;36m[K~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~[m[K
+[2.525s] make[2]: *** [CMakeFiles/two_turtle.dir/build.make:63: CMakeFiles/two_turtle.dir/src/two_turtle.cpp.o] Error 1
+[2.525s] make[1]: *** [CMakeFiles/Makefile2:78: CMakeFiles/two_turtle.dir/all] Error 2
+[2.525s] make: *** [Makefile:141: all] Error 2
+[2.528s] Invoked command in '/home/toffanetto/ecai21/build/two_turtle_control' returned '2': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/foxy /usr/bin/cmake --build /home/toffanetto/ecai21/build/two_turtle_control -- -j12 -l12

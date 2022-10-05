@@ -1,0 +1,82 @@
+[0.024s] Invoking command in '/home/toffanetto/ecai21/build/teleop_cmd_vel': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/foxy /usr/bin/cmake /home/toffanetto/ecai21/src/teleop_cmd_vel -DCMAKE_INSTALL_PREFIX=/home/toffanetto/ecai21/install/teleop_cmd_vel
+[0.079s] -- The C compiler identification is GNU 9.4.0
+[0.141s] -- The CXX compiler identification is GNU 9.4.0
+[0.145s] -- Check for working C compiler: /usr/bin/cc
+[0.208s] -- Check for working C compiler: /usr/bin/cc -- works
+[0.208s] -- Detecting C compiler ABI info
+[0.279s] -- Detecting C compiler ABI info - done
+[0.289s] -- Detecting C compile features
+[0.289s] -- Detecting C compile features - done
+[0.291s] -- Check for working CXX compiler: /usr/bin/c++
+[0.364s] -- Check for working CXX compiler: /usr/bin/c++ -- works
+[0.365s] -- Detecting CXX compiler ABI info
+[0.442s] -- Detecting CXX compiler ABI info - done
+[0.454s] -- Detecting CXX compile features
+[0.454s] -- Detecting CXX compile features - done
+[0.457s] -- Found ament_cmake: 0.9.11 (/opt/ros/foxy/share/ament_cmake/cmake)
+[0.480s] -- Found PythonInterp: /usr/bin/python3 (found suitable version "3.8.10", minimum required is "3") 
+[0.480s] -- Using PYTHON_EXECUTABLE: /usr/bin/python3
+[0.659s] -- Found rclcpp: 2.4.2 (/opt/ros/foxy/share/rclcpp/cmake)
+[0.704s] -- Using all available rosidl_typesupport_c: rosidl_typesupport_fastrtps_c;rosidl_typesupport_introspection_c
+[0.710s] -- Found rosidl_adapter: 1.3.0 (/opt/ros/foxy/share/rosidl_adapter/cmake)
+[0.790s] -- Found OpenSSL: /usr/lib/x86_64-linux-gnu/libcrypto.so (found version "1.1.1f")  
+[0.823s] -- Found FastRTPS: /opt/ros/foxy/include  
+[0.904s] -- Using all available rosidl_typesupport_cpp: rosidl_typesupport_fastrtps_cpp;rosidl_typesupport_introspection_cpp
+[0.958s] -- Found rmw_implementation_cmake: 1.0.3 (/opt/ros/foxy/share/rmw_implementation_cmake/cmake)
+[0.959s] -- Using RMW implementation 'rmw_fastrtps_cpp' as default
+[0.960s] -- Looking for pthread.h
+[1.029s] -- Looking for pthread.h - found
+[1.029s] -- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+[1.106s] -- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Failed
+[1.106s] -- Looking for pthread_create in pthreads
+[1.183s] -- Looking for pthread_create in pthreads - not found
+[1.183s] -- Looking for pthread_create in pthread
+[1.287s] -- Looking for pthread_create in pthread - found
+[1.288s] -- Found Threads: TRUE  
+[1.443s] -- Found geometry_msgs: 2.0.5 (/opt/ros/foxy/share/geometry_msgs/cmake)
+[1.474s] -- Found turtlesim: 1.2.6 (/opt/ros/foxy/share/turtlesim/cmake)
+[1.573s] -- Found ament_lint_auto: 0.9.7 (/opt/ros/foxy/share/ament_lint_auto/cmake)
+[1.637s] -- Added test 'copyright' to check source files copyright and LICENSE
+[1.638s] -- Added test 'cppcheck' to perform static code analysis on C / C++ code
+[1.639s] -- Configured cppcheck include dirs: $<BUILD_INTERFACE:/home/toffanetto/ecai21/src/teleop_cmd_vel/include>
+[1.639s] -- Configured cppcheck exclude dirs and/or files: 
+[1.640s] -- Added test 'cpplint' to check C / C++ code against the Google style
+[1.640s] -- Configured cpplint exclude dirs and/or files: 
+[1.640s] -- Added test 'flake8' to check Python code syntax and style conventions
+[1.641s] -- Added test 'lint_cmake' to check CMake code style
+[1.641s] -- Added test 'pep257' to check Python code against some of the style conventions in PEP 257
+[1.642s] -- Added test 'uncrustify' to check C / C++ code style
+[1.642s] -- Configured uncrustify additional arguments: 
+[1.642s] -- Added test 'xmllint' to check XML markup files
+[1.646s] -- Configuring done
+[1.654s] -- Generating done
+[1.655s] -- Build files have been written to: /home/toffanetto/ecai21/build/teleop_cmd_vel
+[1.662s] Invoked command in '/home/toffanetto/ecai21/build/teleop_cmd_vel' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/foxy /usr/bin/cmake /home/toffanetto/ecai21/src/teleop_cmd_vel -DCMAKE_INSTALL_PREFIX=/home/toffanetto/ecai21/install/teleop_cmd_vel
+[1.664s] Invoking command in '/home/toffanetto/ecai21/build/teleop_cmd_vel': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/foxy /usr/bin/cmake --build /home/toffanetto/ecai21/build/teleop_cmd_vel -- -j12 -l12
+[1.702s] [35m[1mScanning dependencies of target teleop[0m
+[1.738s] [ 50%] [32mBuilding CXX object CMakeFiles/teleop.dir/src/teleop.cpp.o[0m
+[4.150s] [100%] [32m[1mLinking CXX executable teleop[0m
+[4.300s] [100%] Built target teleop
+[4.311s] Invoked command in '/home/toffanetto/ecai21/build/teleop_cmd_vel' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/foxy /usr/bin/cmake --build /home/toffanetto/ecai21/build/teleop_cmd_vel -- -j12 -l12
+[4.335s] Invoking command in '/home/toffanetto/ecai21/build/teleop_cmd_vel': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/foxy /usr/bin/cmake --install /home/toffanetto/ecai21/build/teleop_cmd_vel
+[4.343s] -- Install configuration: ""
+[4.343s] -- Installing: /home/toffanetto/ecai21/install/teleop_cmd_vel/lib/teleop_cmd_vel/teleop
+[4.344s] -- Set runtime path of "/home/toffanetto/ecai21/install/teleop_cmd_vel/lib/teleop_cmd_vel/teleop" to ""
+[4.344s] -- Installing: /home/toffanetto/ecai21/install/teleop_cmd_vel/share/teleop_cmd_vel/launch
+[4.345s] -- Installing: /home/toffanetto/ecai21/install/teleop_cmd_vel/share/teleop_cmd_vel/launch/teleop_turtle.py
+[4.345s] -- Installing: /home/toffanetto/ecai21/install/teleop_cmd_vel/share/ament_index/resource_index/package_run_dependencies/teleop_cmd_vel
+[4.345s] -- Installing: /home/toffanetto/ecai21/install/teleop_cmd_vel/share/ament_index/resource_index/parent_prefix_path/teleop_cmd_vel
+[4.345s] -- Installing: /home/toffanetto/ecai21/install/teleop_cmd_vel/share/teleop_cmd_vel/environment/ament_prefix_path.sh
+[4.345s] -- Installing: /home/toffanetto/ecai21/install/teleop_cmd_vel/share/teleop_cmd_vel/environment/ament_prefix_path.dsv
+[4.345s] -- Installing: /home/toffanetto/ecai21/install/teleop_cmd_vel/share/teleop_cmd_vel/environment/path.sh
+[4.346s] -- Installing: /home/toffanetto/ecai21/install/teleop_cmd_vel/share/teleop_cmd_vel/environment/path.dsv
+[4.346s] -- Installing: /home/toffanetto/ecai21/install/teleop_cmd_vel/share/teleop_cmd_vel/local_setup.bash
+[4.346s] -- Installing: /home/toffanetto/ecai21/install/teleop_cmd_vel/share/teleop_cmd_vel/local_setup.sh
+[4.346s] -- Installing: /home/toffanetto/ecai21/install/teleop_cmd_vel/share/teleop_cmd_vel/local_setup.zsh
+[4.346s] -- Installing: /home/toffanetto/ecai21/install/teleop_cmd_vel/share/teleop_cmd_vel/local_setup.dsv
+[4.346s] -- Installing: /home/toffanetto/ecai21/install/teleop_cmd_vel/share/teleop_cmd_vel/package.dsv
+[4.346s] -- Installing: /home/toffanetto/ecai21/install/teleop_cmd_vel/share/ament_index/resource_index/packages/teleop_cmd_vel
+[4.347s] -- Installing: /home/toffanetto/ecai21/install/teleop_cmd_vel/share/teleop_cmd_vel/cmake/teleop_cmd_velConfig.cmake
+[4.347s] -- Installing: /home/toffanetto/ecai21/install/teleop_cmd_vel/share/teleop_cmd_vel/cmake/teleop_cmd_velConfig-version.cmake
+[4.347s] -- Installing: /home/toffanetto/ecai21/install/teleop_cmd_vel/share/teleop_cmd_vel/package.xml
+[4.351s] Invoked command in '/home/toffanetto/ecai21/build/teleop_cmd_vel' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/foxy /usr/bin/cmake --install /home/toffanetto/ecai21/build/teleop_cmd_vel

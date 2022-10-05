@@ -1,0 +1,24 @@
+[2.724s] Invoking command in '/home/toffanetto/ecai21/build/teleop_cmd_vel': CMAKE_PREFIX_PATH=/opt/ros/foxy /usr/bin/cmake --build /home/toffanetto/ecai21/build/teleop_cmd_vel -- -j12 -l12
+[2.806s] [100%] Built target teleop
+[3.572s] Invoked command in '/home/toffanetto/ecai21/build/teleop_cmd_vel' returned '0': CMAKE_PREFIX_PATH=/opt/ros/foxy /usr/bin/cmake --build /home/toffanetto/ecai21/build/teleop_cmd_vel -- -j12 -l12
+[3.609s] Invoking command in '/home/toffanetto/ecai21/build/teleop_cmd_vel': CMAKE_PREFIX_PATH=/opt/ros/foxy /usr/bin/cmake --install /home/toffanetto/ecai21/build/teleop_cmd_vel
+[3.617s] -- Install configuration: ""
+[3.617s] -- Up-to-date: /home/toffanetto/ecai21/install/teleop_cmd_vel/lib/teleop_cmd_vel/teleop
+[3.618s] -- Up-to-date: /home/toffanetto/ecai21/install/teleop_cmd_vel/share/teleop_cmd_vel/launch
+[3.618s] -- Up-to-date: /home/toffanetto/ecai21/install/teleop_cmd_vel/share/teleop_cmd_vel/launch/teleop_turtle.py
+[3.618s] -- Up-to-date: /home/toffanetto/ecai21/install/teleop_cmd_vel/share/ament_index/resource_index/package_run_dependencies/teleop_cmd_vel
+[3.618s] -- Up-to-date: /home/toffanetto/ecai21/install/teleop_cmd_vel/share/ament_index/resource_index/parent_prefix_path/teleop_cmd_vel
+[3.618s] -- Up-to-date: /home/toffanetto/ecai21/install/teleop_cmd_vel/share/teleop_cmd_vel/environment/ament_prefix_path.sh
+[3.618s] -- Up-to-date: /home/toffanetto/ecai21/install/teleop_cmd_vel/share/teleop_cmd_vel/environment/ament_prefix_path.dsv
+[3.618s] -- Up-to-date: /home/toffanetto/ecai21/install/teleop_cmd_vel/share/teleop_cmd_vel/environment/path.sh
+[3.618s] -- Up-to-date: /home/toffanetto/ecai21/install/teleop_cmd_vel/share/teleop_cmd_vel/environment/path.dsv
+[3.618s] -- Up-to-date: /home/toffanetto/ecai21/install/teleop_cmd_vel/share/teleop_cmd_vel/local_setup.bash
+[3.618s] -- Up-to-date: /home/toffanetto/ecai21/install/teleop_cmd_vel/share/teleop_cmd_vel/local_setup.sh
+[3.618s] -- Up-to-date: /home/toffanetto/ecai21/install/teleop_cmd_vel/share/teleop_cmd_vel/local_setup.zsh
+[3.619s] -- Up-to-date: /home/toffanetto/ecai21/install/teleop_cmd_vel/share/teleop_cmd_vel/local_setup.dsv
+[3.619s] -- Installing: /home/toffanetto/ecai21/install/teleop_cmd_vel/share/teleop_cmd_vel/package.dsv
+[3.619s] -- Up-to-date: /home/toffanetto/ecai21/install/teleop_cmd_vel/share/ament_index/resource_index/packages/teleop_cmd_vel
+[3.619s] -- Up-to-date: /home/toffanetto/ecai21/install/teleop_cmd_vel/share/teleop_cmd_vel/cmake/teleop_cmd_velConfig.cmake
+[3.619s] -- Up-to-date: /home/toffanetto/ecai21/install/teleop_cmd_vel/share/teleop_cmd_vel/cmake/teleop_cmd_velConfig-version.cmake
+[3.619s] -- Up-to-date: /home/toffanetto/ecai21/install/teleop_cmd_vel/share/teleop_cmd_vel/package.xml
+[3.788s] Invoked command in '/home/toffanetto/ecai21/build/teleop_cmd_vel' returned '0': CMAKE_PREFIX_PATH=/opt/ros/foxy /usr/bin/cmake --install /home/toffanetto/ecai21/build/teleop_cmd_vel

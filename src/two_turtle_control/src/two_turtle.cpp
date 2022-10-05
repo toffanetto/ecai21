@@ -169,8 +169,8 @@ void TwoTurtle::follow_turtle(){
     angular_speed = this->orientation_error()*Kp_A;
   }
 
-  cmd_msg->linear.x = (linear_speed > LINEAR_SPEED_MAX) ? LINEAR_SPEED_MAX : linear_speed;
-  cmd_msg->angular.z = (angular_speed > ANGULAR_SPEED_MAX) ? ANGULAR_SPEED_MAX : angular_speed;
+  cmd_msg->linear.x = (abs(linear_speed) > LINEAR_SPEED_MAX) ? copysign(LINEAR_SPEED_MAX,linear_speed) : linear_speed;
+  cmd_msg->angular.z = (abs(angular_speed) > ANGULAR_SPEED_MAX) ? copysign(ANGULAR_SPEED_MAX,angular_speed) : angular_speed;
 
 
   cmd_pub->publish(std::move(cmd_msg));
