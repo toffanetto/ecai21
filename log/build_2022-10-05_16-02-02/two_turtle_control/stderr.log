@@ -1,0 +1,7 @@
+[01m[K/home/toffanetto/ecai21/src/two_turtle_control/src/two_turtle.cpp:[m[K In member function ‘[01m[Kdouble TwoTurtle::yaw_error()[m[K’:
+[01m[K/home/toffanetto/ecai21/src/two_turtle_control/src/two_turtle.cpp:137:5:[m[K [01;35m[Kwarning: [m[Kthis ‘[01m[Kif[m[K’ clause does not guard... [[01;35m[K-Wmisleading-indentation[m[K]
+  137 |     [01;35m[Kif[m[K(yaw_target < theta && error < M_PI)
+      |     [01;35m[K^~[m[K
+[01m[K/home/toffanetto/ecai21/src/two_turtle_control/src/two_turtle.cpp:139:7:[m[K [01;36m[Knote: [m[K...this statement, but the latter is misleadingly indented as if it were guarded by the ‘[01m[Kif[m[K’
+  139 |       [01;36m[Kstd[m[K::cout << "IAIAO" << std::endl;
+      |       [01;36m[K^~~[m[K

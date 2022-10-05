@@ -19,8 +19,8 @@ using namespace std::chrono_literals;
 //Definição dos valores máximos de velocidade para o simulador turtlesim
 #define LINEAR_SPEED_MAX 2.0
 #define ANGULAR_SPEED_MAX 2.0
-#define Kp_L 0.5
-#define Kp_A 0.85
+#define Kp_L 1
+#define Kp_A 1
 
 // Declaração do nó de teleoperação para o simulador turtlesim
 class TwoTurtle : public rclcpp::Node{
@@ -126,11 +126,38 @@ double TwoTurtle::yaw_error(){
 
     double yaw_target = (modulo(turtle1_pose_0)==0) ? 0 : copysign(acos(produto_interno(x_ref,turtle1_pose_0)/modulo(turtle1_pose_0)),turtle1_pose_0->y);
 
-    return (yaw_target - turtle2_pose->theta);
+    yaw_target = (yaw_target < 0) ? yaw_target+2*M_PI : yaw_target;
+
+    double theta = (turtle2_pose->theta < 0) ? turtle2_pose->theta+2*M_PI : turtle2_pose->theta;
+
+    double error = abs(yaw_target - theta);
+
+    if(yaw_target > theta && error > M_PI){
+      error = -error;
+    }
+    if(yaw_target < theta && error < M_PI){
+      error = -error;
+    }
+
+    return error;
 }
 
 double TwoTurtle::orientation_error(){
-    return turtle1_pose->theta - turtle2_pose->theta;
+
+    double theta = (turtle2_pose->theta < 0) ? turtle2_pose->theta+2*M_PI : turtle2_pose->theta;
+
+    double yaw_target = (turtle1_pose->theta < 0) ? turtle1_pose->theta+2*M_PI : turtle1_pose->theta;
+
+    double error = abs(yaw_target - theta);
+
+    if(yaw_target > theta && error > M_PI){
+      error = -error;
+    }
+    if(yaw_target < theta && error < M_PI){
+      error = -error;
+    }
+
+    return error;
 }
 
 void TwoTurtle::pose_1_callback(const turtlesim::msg::Pose::SharedPtr target1){
