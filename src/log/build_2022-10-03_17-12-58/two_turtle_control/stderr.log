@@ -1,8 +1,0 @@
-[01m[K/home/toffanetto/ecai21/src/two_turtle_control/src/two_turtle.cpp:[m[K In member function ‘[01m[Kvoid TwoTurtle::pose_2_callback(turtlesim::msg::Pose_<std::allocator<void> >::SharedPtr)[m[K’:
-[01m[K/home/toffanetto/ecai21/src/two_turtle_control/src/two_turtle.cpp:74:3:[m[K [01;31m[Kerror: [m[K‘[01m[Khis[m[K’ was not declared in this scope; did you mean ‘[01m[Kthis[m[K’?
-   74 |   [01;31m[Khis[m[K->follow_turtle();
-      |   [01;31m[K^~~[m[K
-      |   [32m[Kthis[m[K
-make[2]: *** [CMakeFiles/two_turtle.dir/build.make:63: CMakeFiles/two_turtle.dir/src/two_turtle.cpp.o] Error 1
-make[1]: *** [CMakeFiles/Makefile2:78: CMakeFiles/two_turtle.dir/all] Error 2
-make: *** [Makefile:141: all] Error 2

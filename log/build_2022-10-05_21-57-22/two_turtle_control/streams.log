@@ -1,0 +1,28 @@
+[0.025s] Invoking command in '/home/toffanetto/ecai21/build/two_turtle_control': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/foxy /usr/bin/cmake --build /home/toffanetto/ecai21/build/two_turtle_control -- -j12 -l12
+[0.063s] [35m[1mScanning dependencies of target two_turtle[0m
+[0.091s] [ 50%] [32mBuilding CXX object CMakeFiles/two_turtle.dir/src/two_turtle.cpp.o[0m
+[4.896s] [100%] [32m[1mLinking CXX executable two_turtle[0m
+[5.152s] [100%] Built target two_turtle
+[5.190s] Invoked command in '/home/toffanetto/ecai21/build/two_turtle_control' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/foxy /usr/bin/cmake --build /home/toffanetto/ecai21/build/two_turtle_control -- -j12 -l12
+[5.222s] Invoking command in '/home/toffanetto/ecai21/build/two_turtle_control': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/foxy /usr/bin/cmake --install /home/toffanetto/ecai21/build/two_turtle_control
+[5.236s] -- Install configuration: ""
+[5.237s] -- Installing: /home/toffanetto/ecai21/install/two_turtle_control/lib/two_turtle_control/two_turtle
+[5.244s] -- Set runtime path of "/home/toffanetto/ecai21/install/two_turtle_control/lib/two_turtle_control/two_turtle" to ""
+[5.244s] -- Up-to-date: /home/toffanetto/ecai21/install/two_turtle_control/share/two_turtle_control/launch
+[5.245s] -- Up-to-date: /home/toffanetto/ecai21/install/two_turtle_control/share/two_turtle_control/launch/two_turtle.py
+[5.245s] -- Up-to-date: /home/toffanetto/ecai21/install/two_turtle_control/share/ament_index/resource_index/package_run_dependencies/two_turtle_control
+[5.245s] -- Up-to-date: /home/toffanetto/ecai21/install/two_turtle_control/share/ament_index/resource_index/parent_prefix_path/two_turtle_control
+[5.245s] -- Up-to-date: /home/toffanetto/ecai21/install/two_turtle_control/share/two_turtle_control/environment/ament_prefix_path.sh
+[5.246s] -- Up-to-date: /home/toffanetto/ecai21/install/two_turtle_control/share/two_turtle_control/environment/ament_prefix_path.dsv
+[5.246s] -- Up-to-date: /home/toffanetto/ecai21/install/two_turtle_control/share/two_turtle_control/environment/path.sh
+[5.246s] -- Up-to-date: /home/toffanetto/ecai21/install/two_turtle_control/share/two_turtle_control/environment/path.dsv
+[5.246s] -- Up-to-date: /home/toffanetto/ecai21/install/two_turtle_control/share/two_turtle_control/local_setup.bash
+[5.247s] -- Up-to-date: /home/toffanetto/ecai21/install/two_turtle_control/share/two_turtle_control/local_setup.sh
+[5.247s] -- Up-to-date: /home/toffanetto/ecai21/install/two_turtle_control/share/two_turtle_control/local_setup.zsh
+[5.247s] -- Up-to-date: /home/toffanetto/ecai21/install/two_turtle_control/share/two_turtle_control/local_setup.dsv
+[5.247s] -- Installing: /home/toffanetto/ecai21/install/two_turtle_control/share/two_turtle_control/package.dsv
+[5.247s] -- Up-to-date: /home/toffanetto/ecai21/install/two_turtle_control/share/ament_index/resource_index/packages/two_turtle_control
+[5.247s] -- Up-to-date: /home/toffanetto/ecai21/install/two_turtle_control/share/two_turtle_control/cmake/two_turtle_controlConfig.cmake
+[5.248s] -- Up-to-date: /home/toffanetto/ecai21/install/two_turtle_control/share/two_turtle_control/cmake/two_turtle_controlConfig-version.cmake
+[5.248s] -- Up-to-date: /home/toffanetto/ecai21/install/two_turtle_control/share/two_turtle_control/package.xml
+[5.255s] Invoked command in '/home/toffanetto/ecai21/build/two_turtle_control' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/foxy /usr/bin/cmake --install /home/toffanetto/ecai21/build/two_turtle_control

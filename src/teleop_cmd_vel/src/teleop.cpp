@@ -1,3 +1,10 @@
+// @toffanetto
+// Exercício 1 -- Teleop
+// Autor: Gabriel Toffanetto França da Rocha
+// Universidade Federal de Itajubá -- Campus Itabira
+// ECAi21.2 -- Laboratório de Robótica Móvel
+// 2022.2
+
 #include <cstdio>
 #include <memory>
 #include <chrono>
