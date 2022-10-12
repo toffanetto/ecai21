@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.5)
-project(two_turtle_control)
+project(turtle_avoid_control)
 
 # Default to C99
 if(NOT CMAKE_C_STANDARD)
@@ -22,19 +22,19 @@ find_package(std_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
 find_package(turtlesim REQUIRED)
 
-add_executable(two_turtle src/two_turtle.cpp)
-target_include_directories(two_turtle PUBLIC
+add_executable(turtle_avoid src/turtle_avoid.cpp)
+target_include_directories(turtle_avoid PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>)
 ament_target_dependencies(
-  two_turtle
+  turtle_avoid
   "rclcpp"
   "std_msgs"
   "geometry_msgs"
   "turtlesim"
 )
 
-install(TARGETS two_turtle
+install(TARGETS turtle_avoid
   DESTINATION lib/${PROJECT_NAME})
   
 install(DIRECTORY launch 
