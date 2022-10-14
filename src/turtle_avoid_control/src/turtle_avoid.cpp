@@ -322,13 +322,6 @@ void TurtleAvoid::follow_turtle(){
 	cmd_msg->linear.x = (abs(linear_speed) > LINEAR_SPEED_MAX) ? copysign(LINEAR_SPEED_MAX,linear_speed) : linear_speed;
 	cmd_msg->angular.z = (abs(angular_speed) > ANGULAR_SPEED_MAX) ? copysign(ANGULAR_SPEED_MAX,angular_speed) : angular_speed;
 
-	if(abs(cmd_msg->linear.x) > 2.0){
-		RCLCPP_ERROR(this->get_logger(), "LINEAR SPEED OVERFULL");
-	}
-	if(abs(cmd_msg->angular.z) > 2.0){
-		RCLCPP_ERROR(this->get_logger(), "ANGULAR SPEED OVERFULL");
-	}
-
 	// Publicação das velocidades para a turtle2 com base na lei de controle implementada
 	cmd_pub->publish(std::move(cmd_msg));
 
