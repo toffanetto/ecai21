@@ -29,10 +29,10 @@ using namespace std::chrono_literals;
 #define ANGULAR_SPEED_MAX 2.0
 
 // Definição dos ganhos proporcionais para velocidade linear e angular
-#define Kp_L 1
+#define Kp_L 0.8
 #define Kp_A 1
-#define Kp_Ld 0.7
-#define Kp_Ad 1
+#define Kp_Ld 0.3
+#define Kp_Ad 1.5
 
 // Declaração do nó de teleoperação para o simulador turtlesim
 class TurtleAvoid : public rclcpp::Node{
@@ -76,11 +76,11 @@ class TurtleAvoid : public rclcpp::Node{
 								"/turtle2/pose", default_qos, 
 								std::bind(&TurtleAvoid::pose_2_callback, this, _1));
 
-
-    auto turtle2_target_ptr = std::make_shared<turtlesim::msg::Pose>();
-    turtle2_target_ptr->x = 8;
-    turtle2_target_ptr->y = 10;
-    turtle2_target = turtle2_target_ptr;
+			// Declaração do ponto de destino inicial da turtle
+			auto turtle2_target_ptr = std::make_shared<turtlesim::msg::Pose>();
+			turtle2_target_ptr->x = 8;
+			turtle2_target_ptr->y = 10;
+			turtle2_target = turtle2_target_ptr;
 
 			RCLCPP_INFO(this->get_logger(), "ECAi21 | Two Turtle");
 		}
@@ -107,6 +107,10 @@ class TurtleAvoid : public rclcpp::Node{
 
 		// Declaração da função de cálculo do erro de ângulo entre as turtle's
 		double yaw_error(const turtlesim::msg::Pose::SharedPtr target1,const turtlesim::msg::Pose::SharedPtr target2);
+
+
+		// Declaração da função de cálculo do erro de ângulo de repulsão entre as turtle's
+		double yaw_error_avoid(const turtlesim::msg::Pose::SharedPtr target1,const turtlesim::msg::Pose::SharedPtr target2);
 
 		// Declaração da função de cálculo de módulo de vetor 2D
 		double modulo(const turtlesim::msg::Pose::SharedPtr target);
@@ -200,6 +204,41 @@ double TurtleAvoid::yaw_error(const turtlesim::msg::Pose::SharedPtr target1,cons
     return error;
 }
 
+// Calculo do erro de ângulo entre as turtle's
+double TurtleAvoid::yaw_error_avoid(const turtlesim::msg::Pose::SharedPtr target1,const turtlesim::msg::Pose::SharedPtr target2){
+	// Declaração da posição da turtle1 reduzida à posição da turtle2
+    auto turtle_target_0 = std::make_shared<turtlesim::msg::Pose>();
+
+	// Declaração do vetor unitário i
+    auto x_ref = std::make_shared<turtlesim::msg::Pose>();
+    x_ref->x = 1;
+    x_ref->y = 0;
+
+	// Redução da posição do alvo à turtle2
+    turtle_target_0->x = target2->x - target1->x;
+    turtle_target_0->y = target2->y - target1->y;
+
+	// Cálculo do ângulo de yaw da turtle1 em relação ao plano reduzido à turtle2
+    double yaw_target = (modulo(turtle_target_0)==0) ? 0 : copysign(acos(produto_interno(x_ref,turtle_target_0)/modulo(turtle_target_0)),turtle_target_0->y);
+
+	// Remapeamento do ângulo de yaw entre 0 e 360°
+    yaw_target = (yaw_target < 0) ? yaw_target+2*M_PI : yaw_target;
+
+	// Adicionando M_PI para reverter o angulo
+	yaw_target = (yaw_target+M_PI > 2*M_PI) ? (yaw_target+M_PI - 2*M_PI) : (yaw_target+M_PI );
+
+	// Remapeamento do ângulo theta da turtle2 entre 0 e 360°
+    double theta = (target1->theta < 0) ? target1->theta+2*M_PI : target1->theta;
+
+	// Obtenção do erro de angulo em módulo
+    double error = abs(yaw_target - theta);
+
+	// Adição do sinal de erro baseado na menor distância angular
+	error = ((yaw_target > theta && error > M_PI) || (yaw_target < theta && error < M_PI)) ? -error : error;
+
+    return error;
+}
+
 // Callback de recebimento da posição da turtle1
 void TurtleAvoid::pose_1_callback(const turtlesim::msg::Pose::SharedPtr target1){
 	// Flag para acusar recebimento da posição da turtle1
@@ -231,30 +270,70 @@ void TurtleAvoid::follow_turtle(){
 	double linear_speed = 0;
 	double angular_speed = 0;
 
-  if(this->linear_error(turtle2_pose,turtle1_pose) < 1.5){
+	// Verificação se a turtle2 está no raio de obstáculo da turtle1
+	if(this->linear_error(turtle2_pose,turtle1_pose) < 1.5){
+		
+		// Velocidade linear setada em função da proximidade entre as duas
 		linear_speed = this->linear_error(turtle2_pose,turtle1_pose)*Kp_Ld;
-		angular_speed = this->yaw_error(turtle2_pose,turtle2_target)*(Kp_A-0.4)-this->yaw_error(turtle2_pose,turtle1_pose)*1/(this->linear_error(turtle2_pose,turtle1_pose))*Kp_Ad;
-  }
-  else if(this->linear_error(turtle2_pose,turtle2_target) > 0.1){
+
+		// Velocidade angular setada em função do erro entre o erro de direção entre as
+		// duas tartarugas, somando M_PI, de forma à enviar a turtle2 para a direção oposta
+		// ao obstáculo
+		angular_speed = (this->yaw_error_avoid(turtle2_pose,turtle1_pose))*Kp_Ad;
+		
+		RCLCPP_WARN(this->get_logger(), "CLOSE TO TURTLE, avoiding...");
+  	}
+
+	// Caso não haja obstáculo, segue a navegação normalmente até o target point
+  	else if(this->linear_error(turtle2_pose,turtle2_target) > 0.1){
 		linear_speed = this->linear_error(turtle2_pose,turtle2_target)*Kp_L;
 		angular_speed = this->yaw_error(turtle2_pose,turtle2_target)*Kp_A;
-  }
-  else{
-    auto turtle2_target_ptr = std::make_shared<turtlesim::msg::Pose>();
-    turtle2_target_ptr->x = rand() % 10 + 1;
-    turtle2_target_ptr->y = rand() % 10 + 1;
-    turtle2_target = turtle2_target_ptr;
-  }
+	}
+
+	// Caso esteja no raio de convergência do target point, é sorteado um novo alvo no plano
+	else{
+		auto turtle2_target_ptr = std::make_shared<turtlesim::msg::Pose>();
+		turtle2_target_ptr->x = rand() % 10 + 1;
+		turtle2_target_ptr->y = rand() % 10 + 1;
+		turtle2_target = turtle2_target_ptr;
+	}
+
+	// Testa se a turtle2 está muito próxima das paredes, caso sim, reduz sua velocidade linear
+	// de forma proporcional, reduzindo o raio do ICR e desviando da parede
+	if(turtle2_pose->x < 1){
+		linear_speed = turtle2_pose->x*Kp_Ld;
+		RCLCPP_WARN(this->get_logger(), "CLOSE TO WALL, avoiding...");
+	}
+	else if(turtle2_pose->x > 11){
+		linear_speed = (12-turtle2_pose->x)*Kp_Ld;
+		RCLCPP_WARN(this->get_logger(), "CLOSE TO WALL, avoiding...");
+	}
+	else if(turtle2_pose->y < 1){
+		linear_speed = turtle2_pose->y*Kp_Ld;
+		RCLCPP_WARN(this->get_logger(), "CLOSE TO WALL, avoiding...");
+	}
+	else if(turtle2_pose->y > 11){
+		linear_speed = (12-turtle2_pose->y)*Kp_Ld;
+		RCLCPP_WARN(this->get_logger(), "CLOSE TO WALL, avoiding...");
+	}
 
 	// Saturação das velocidades entre -LINEAR_SPEED_MAX e LINEAR_SPEED_MAX e entre -ANGULAR_SPEED_MAX e ANGULAR_SPEED_MAX
 	// Atribuição das velocidades na mensagem
 	cmd_msg->linear.x = (abs(linear_speed) > LINEAR_SPEED_MAX) ? copysign(LINEAR_SPEED_MAX,linear_speed) : linear_speed;
 	cmd_msg->angular.z = (abs(angular_speed) > ANGULAR_SPEED_MAX) ? copysign(ANGULAR_SPEED_MAX,angular_speed) : angular_speed;
 
+	if(abs(cmd_msg->linear.x) > 2.0){
+		RCLCPP_ERROR(this->get_logger(), "LINEAR SPEED OVERFULL");
+	}
+	if(abs(cmd_msg->angular.z) > 2.0){
+		RCLCPP_ERROR(this->get_logger(), "ANGULAR SPEED OVERFULL");
+	}
+
 	// Publicação das velocidades para a turtle2 com base na lei de controle implementada
 	cmd_pub->publish(std::move(cmd_msg));
 
 	show_pose();
+	
 }
 
 int main(int argc, char ** argv){
