@@ -30,13 +30,22 @@ def generate_launch_description():
         condition=IfCondition(LaunchConfiguration('rviz'))
     )
 
+    # Reative Control
+    reative_control = Node(
+        package='reative_control',
+        executable='reative_control',
+        name='reative_control',
+        output='screen'
+    )
+
     return LaunchDescription([
         DeclareLaunchArgument(
           'world',
-          default_value=[os.path.join(pkg_reative_control, 'worlds', 'world_2.world'), ''],
+          default_value=[os.path.join(pkg_reative_control, 'worlds', 'world_1.world'), ''],
           description='SDF world file'),
         DeclareLaunchArgument('rviz', default_value='true',
                               description='Open RViz.'),
         gazebo,
+        reative_control,
         rviz
     ])
