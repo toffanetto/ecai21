@@ -1,5 +1,10 @@
-# ecai21
-Mobile Robots (ECAi21) subject projects
+# ecai21 Repository
+
+Mobile Robotics (ECAi21) subject's projects
+
+Professor: Dr. André Chaves Magalhães
+
+Tecnologic Sciences Institute -- Federal University of Itajubá - Campus Itabira
 
 ---
 
