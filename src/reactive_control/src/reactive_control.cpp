@@ -16,17 +16,17 @@ using namespace std::chrono_literals;
 #define LINEAR_SPEED_MAX 2.0
 #define ANGULAR_SPEED_MAX 2.0
 #define Kp_L 0.2
-#define Kp_Ld 1
-#define Kp_A 1
+#define Kp_Ld 0.1
+#define Kp_A 0.7
 
-#define RANGE_CRASH 5
+#define RANGE_CRASH 3
 #define ROBOT_WIDTH 0.84
 
 class ReactiveControl : public rclcpp::Node{
 
 	public:
 
-		ReactiveControl() : Node("Reactive_control"){
+		ReactiveControl() : Node("reactive_control"){
 			auto default_qos = rclcpp::QoS(rclcpp::SystemDefaultsQoS());
 
 			laser_sub = this->create_subscription<sensor_msgs::msg::LaserScan>("/dolly/laser_scan", default_qos, std::bind(&ReactiveControl::laser_callback, this, _1));

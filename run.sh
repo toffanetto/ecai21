@@ -1,4 +1,4 @@
-colcon build --packages-select turtle_avoid_control
+colcon build --packages-select reactive_control
 
-ros2 launch turtle_avoid_control turtle_avoid.py
+ros2 launch reactive_control reactive_control.py
 
