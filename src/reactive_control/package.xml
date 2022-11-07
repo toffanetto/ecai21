@@ -3,7 +3,7 @@
 <package format="3">
   <name>reactive_control</name>
   <version>0.0.0</version>
-  <description>TODO: Package description</description>
+  <description>Minimum Path reactive control applied in a diff drive robot using ROS 2, Gazebo and Dolly Robot.</description>
   <maintainer email="gabrieltoffanetto@gmail.com">toffanetto</maintainer>
   <license>TODO: License declaration</license>
 

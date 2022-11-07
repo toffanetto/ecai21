@@ -1,0 +1,33 @@
+<?xml version="1.0" ?>
+<sdf version="1.4">
+
+  <world name="default">
+    <include>
+      <uri>model://ground_plane</uri>
+    </include>
+
+    <include>
+      <uri>model://sun</uri>
+    </include>
+
+    <include>
+      <uri>model://dolly</uri><pose>
+      -5
+      0
+      0
+      0
+      0
+      0
+      </pose>
+    </include>
+
+    <include>
+      <uri>model://casual_female</uri>
+    </include>
+
+    <include>
+      <uri>model://amb2</uri>
+    </include>
+  </world>
+</sdf>
+
