@@ -1,4 +1,0 @@
-source;share/reactive_control/environment/ament_prefix_path.sh
-source;share/reactive_control/environment/path.sh
-source;share/reactive_control/environment/reactive_control.sh
-source;share/reactive_control/environment/reactive_control.dsv

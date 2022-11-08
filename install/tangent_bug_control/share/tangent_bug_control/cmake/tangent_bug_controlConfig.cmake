@@ -16,7 +16,7 @@ set(_tangent_bug_control_CONFIG_INCLUDED TRUE)
 
 # output package information
 if(NOT tangent_bug_control_FIND_QUIETLY)
-  message(STATUS "Found tangent_bug_control: 0.0.0 (${tangent_bug_control_DIR})")
+  message(STATUS "Found tangent_bug_control: 1.0.0 (${tangent_bug_control_DIR})")
 endif()
 
 # warn when using a deprecated package

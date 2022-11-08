@@ -1,1 +1,1 @@
-geometry_msgs:rclcpp:sensor_msgs:std_msgs
+gazebo:geometry_msgs:nav_msgs:rclcpp:sensor_msgs:std_msgs

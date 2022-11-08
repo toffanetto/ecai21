@@ -21,6 +21,7 @@ find_package(rclcpp REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
 find_package(sensor_msgs REQUIRED)
+find_package(nav_msgs REQUIRED)
 find_package(gazebo REQUIRED)
 
 add_executable(tangent_bug_control src/tangent_bug_control.cpp)
@@ -33,6 +34,7 @@ ament_target_dependencies(
   "std_msgs"
   "geometry_msgs"
   "sensor_msgs"
+  "nav_msgs"
   "gazebo"
 )
 

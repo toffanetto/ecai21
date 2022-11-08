@@ -1,2 +1,0 @@
-prepend-non-duplicate;GAZEBO_MODEL_PATH;share/reactive_control/models
-prepend-non-duplicate;GAZEBO_RESOURCE_PATH;share/reactive_control/worlds
