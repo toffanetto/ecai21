@@ -3,7 +3,7 @@
 #include <memory>
 #include <chrono>
 #include <functional>
-#include <queue>
+#include <algorithm>
 #include <vector>
 #include <cmath>
 
@@ -22,7 +22,7 @@ using namespace std::chrono_literals;
 #define Kp_L 0.1
 #define Kp_Ld 0.1
 #define Kp_Lw 0.8
-#define Kp_A 0.8
+#define Kp_A 0.5
 #define Kp_At 0.5
 #define Kp_Ad 0.2
 
@@ -49,6 +49,7 @@ struct Ponto{
 struct Descontinuidade{
 	Ponto ponto;
 	double d;
+	bool inicio = true;
 };
 
 
@@ -162,6 +163,8 @@ class TangentBugControl : public rclcpp::Node{
 		bool O_target = false;
 		bool goal_target = true;
 
+		std::vector<Descontinuidade> desc;
+
 		Ponto target = {40,0,0};
 		Ponto robot_point;
 		Euler robot_orientation;
@@ -199,10 +202,9 @@ void TangentBugControl::cmd_timer_callback(){
 
 		double theta = 0, phi = 0, error_dw = 0;
 		int near_index = 0;
-		
-		auto cmp = [](Descontinuidade left, Descontinuidade right) { return (left.d) > (right.d); };
 
-		std::priority_queue<Descontinuidade, std::vector<Descontinuidade>, decltype(cmp)> desc(cmp);
+		if(!O_target)
+			desc.clear();
 
 		// Processamento dos dados do vetor de pontos do laser
 		for(auto i=0u; i<laser_data->ranges.size();i++){
@@ -228,7 +230,7 @@ void TangentBugControl::cmd_timer_callback(){
 				}
 
 				// Armazena o ponto mais próximo do obstáculo
-				if(range < nearest_point.first){ // Definição do ponto mais próximo do robô
+				if(range < nearest_point.first && range != std::numeric_limits<double>::infinity()){ // Definição do ponto mais próximo do robô
 					nearest_point = std::make_pair(range, theta);
 					near_index = i;
 				}
@@ -243,19 +245,64 @@ void TangentBugControl::cmd_timer_callback(){
 
 			}
 
-			if(i >= 1){
-				if(abs(laser_data->ranges.at(i)-laser_data->ranges.at(i-1))>1){
+			if(i >= 1 && goal_target){
+
+				if(abs(laser_data->ranges.at(i)-laser_data->ranges.at(i-1))>1){ // Ocorreu uma descontinuidade
+					
 					Descontinuidade Oi;
-					Oi.ponto.x = (laser_data->ranges.at(i-1)-1.5)*cos((i-1)*laser_data->angle_increment + laser_data->angle_min);
-					Oi.ponto.y = (laser_data->ranges.at(i-1)-1.5)*sin((i-1)*laser_data->angle_increment + laser_data->angle_min);
+
+					double range1 = (laser_data->ranges.at(i-1) == std::numeric_limits<double>::infinity()) ? 10 : laser_data->ranges.at(i-1);
+					double range2 = (laser_data->ranges.at(i) == std::numeric_limits<double>::infinity()) ? 10 : laser_data->ranges.at(i);
+
+					Oi.ponto.x = (std::min(range1,range2))*cos((i-1)*laser_data->angle_increment + laser_data->angle_min) + robot_point.x;
+					Oi.ponto.y = (std::min(range1,range2))*sin((i-1)*laser_data->angle_increment + laser_data->angle_min) + robot_point.y;
+
 					Oi.d = distPoints(Oi.ponto,target) + distPoints(robot_point,target);
 
-					desc.push(Oi);
+					Oi.ponto.x = (std::min(range1,range2)-1.5)*cos((i-1)*laser_data->angle_increment + laser_data->angle_min) + robot_point.x;
+					Oi.ponto.y = (std::min(range1,range2)-1.5)*sin((i-1)*laser_data->angle_increment + laser_data->angle_min) + robot_point.y;
+
+					Oi.inicio = (range2 < range1) ? true : false;
+
+					
+					if(desc.empty()){ // Se estiver vazia, adiciona a primeira
+						desc.push_back(Oi);
+					}
+					else{
+						if(range2 < range1){ // Se detectar o início de um obstáculo...
+							if(desc.back().inicio){ // Se ja existia um início, tira e coloca o novo
+								desc.pop_back();
+								desc.push_back(Oi);
+							}
+							else{ // Se era um fim de obstáculo...
+								if(distPoints(Oi.ponto,desc.back().ponto) > 2*ROBOT_WIDTH){  // Verifica se o robo pode passar no espaço entre eles
+									desc.push_back(Oi); 
+								}
+								else{
+									desc.pop_back(); // Se não puder, desconsidera o antigo fim.
+								}
+							}
+						}
+						else if(range2 > range1){// Se detectar o fim de um obstáculo...
+							if(desc.back().inicio){ // Se existia um inicio, adiciona o fim do mesmo
+								desc.push_back(Oi);
+							}
+							else{ // Se existia um fim, ele é removido e adiciona o fim novo
+								desc.pop_back();
+								desc.push_back(Oi);
+							}
+						}				
+					}
 				}
 			}
 
 			
 		}
+
+		
+		auto cmp = [](Descontinuidade left, Descontinuidade right) { return (left.d) < (right.d); };
+
+		std::sort(desc.begin(),desc.end(), cmp);
 
 		// troca de contexto goal_target -> O_target
 		if(crash && goal_target){
@@ -302,22 +349,18 @@ void TangentBugControl::cmd_timer_callback(){
 				}
 
 				error_dw = (near_index < int(laser_data->ranges.size())/2) ?  -(nearest_point.first-WALL_DISTANCE) : (nearest_point.first-WALL_DISTANCE);
-				
+
+				phi = (phi > M_PI_2) ? phi-M_PI : phi;
+
 			}
 
 
 			// Obtenção das velelocidades lineares e angulares por meio da lei de controle implementada
-			linear_speed = ((abs(Kp_Ld*phi) - abs(Kp_Ld*error_dw)) < LINEAR_SPEED_MAX*Kp_Lw) ? LINEAR_SPEED_MAX*Kp_Lw - abs(Kp_Ld*phi) - abs(Kp_Ld*error_dw) : 0;
-			angular_speed = (abs(phi*Kp_At + error_dw*Kp_Ad) < ANGULAR_SPEED_MAX) ? phi*Kp_At + error_dw*Kp_Ad : copysign(ANGULAR_SPEED_MAX,phi);
-
-					std::cout << "phi: " << phi << std::endl
-							<< "error_dw: " << error_dw << std::endl
-							<< "linear_speed: " << linear_speed << std::endl
-							<< "angular_speed: " << angular_speed << std::endl
-							<< "near_index: " << near_index << std::endl;
-
+			linear_speed = ((abs(Kp_Ld*phi) - abs(Kp_Ld*error_dw)) < LINEAR_SPEED_MAX*Kp_Lw) ? LINEAR_SPEED_MAX*Kp_Lw/2 - abs(Kp_Ld*phi) - abs(Kp_Ld*error_dw) : 0;
+			angular_speed = (abs(phi*Kp_At + error_dw*Kp_Ad) < ANGULAR_SPEED_MAX) ? phi*Kp_At/2 + error_dw*Kp_Ad/2 : copysign(ANGULAR_SPEED_MAX,phi);
 			
 			// Troca de contexto wall_follow -> goal_target
+
 			double goal_theta = getYaw(target);
 			double laser_theta = goal_theta - robot_orientation.yaw;
 			double laser_index = (laser_theta-laser_data->angle_min)/laser_data->angle_increment;
@@ -331,7 +374,6 @@ void TangentBugControl::cmd_timer_callback(){
 
 		// Navegação em linha reta para o destino (m-line)
 		if(goal_target){
-			RCLCPP_INFO(this->get_logger(), "Navigate to goal.");
 
 			double error_linear = distPoints(robot_point,target);
 			double error_angular = (getYaw(robot_point,target)-robot_orientation.yaw); 
@@ -343,6 +385,10 @@ void TangentBugControl::cmd_timer_callback(){
 			if(error_linear < 0.5){
 				linear_speed = 0;
 				angular_speed = 0;
+				RCLCPP_INFO(this->get_logger(), "Reached goal.");
+			}
+			else{
+				RCLCPP_INFO(this->get_logger(), "Navigate to goal.");
 			}
 
 			// Saturadores
@@ -359,14 +405,25 @@ void TangentBugControl::cmd_timer_callback(){
 		if(O_target){
 			RCLCPP_INFO(this->get_logger(), "Navigate to discontinuity.");
 
-			Descontinuidade O = desc.top();
+			Descontinuidade O = desc.front();
 
 			double error_linear = distPoints(robot_point,O.ponto);
 			double error_angular = (getYaw(robot_point,O.ponto)-robot_orientation.yaw); 
 
+
+			std::cout << "            x: " << O.ponto.x << std::endl
+					  << "            y: " << O.ponto.y << std::endl
+					  << " error_linear: " << error_linear << std::endl
+					  << "error_angular: " << error_angular << std::endl;
+
+			for(auto &point : desc){
+				std::cout << point.ponto.x << " " << point.ponto.y << " " << point.d << std::endl;
+			}
+			std::cout << std::endl;
+
 			// Obtenção das velelocidades lineares e angulares por meio da lei de controle implementada
-			linear_speed = error_linear*Kp_L - error_angular*Kp_Ld;
-			angular_speed = error_angular*Kp_A;
+			linear_speed = error_linear*Kp_L/2 - error_angular*Kp_Ld + 0.2;
+			angular_speed = error_angular*Kp_A/2;
 
 			// Saturadores
 			if(linear_speed > LINEAR_SPEED_MAX)
@@ -378,7 +435,7 @@ void TangentBugControl::cmd_timer_callback(){
 				angular_speed = copysign(ANGULAR_SPEED_MAX,angular_speed);
 
 			// Troca de contexto O_target -> wall_follow
-			if(error_linear < 0.5){
+			if(error_linear < 0.2){
 				O_target = false;
 				wall_follow = true;
 			}
