@@ -5,6 +5,7 @@
 #include <functional>
 #include <queue>
 #include <vector>
+#include <cmath>
 
 #include <rclcpp/rclcpp.hpp>
 #include <geometry_msgs/msg/twist.hpp>
@@ -16,16 +17,16 @@ using std::placeholders::_1;
 using namespace std::chrono_literals;
 
 
-#define LINEAR_SPEED_MAX 2.0
-#define ANGULAR_SPEED_MAX 2.0
-#define Kp_L 0.2
+#define LINEAR_SPEED_MAX 1.0
+#define ANGULAR_SPEED_MAX 1.0
+#define Kp_L 0.1
 #define Kp_Ld 0.1
-#define Kp_A 0.5
+#define Kp_A 0.8
 #define Kp_At 0.5
 #define Kp_Ad 0.2
 
-#define RANGE_CRASH 3
-#define RANGE_SCANNER 10
+#define RANGE_CRASH 4
+#define RANGE_SCANNER 8
 #define ROBOT_WIDTH 0.84
 #define WALL_DISTANCE 1
 
@@ -160,7 +161,7 @@ class TangentBugControl : public rclcpp::Node{
 		bool O_target = false;
 		bool goal_target = true;
 
-		Ponto target = {1,1,0};
+		Ponto target = {10,10,0};
 		Ponto robot_point;
 		Euler robot_orientation;
 
@@ -174,9 +175,10 @@ void TangentBugControl::laser_callback(const sensor_msgs::msg::LaserScan::Shared
 
 void TangentBugControl::odom_callback(const nav_msgs::msg::Odometry::SharedPtr pose){ 	
 	robot_point = {pose->pose.pose.position.x, pose->pose.pose.position.y, pose->pose.pose.position.z};
-	Quaternion robot_quaternion = {pose->pose.pose.orientation.x, pose->pose.pose.orientation.y, pose->pose.pose.orientation.z, pose->pose.pose.orientation.w};
+	Quaternion robot_quaternion = {pose->pose.pose.orientation.w, pose->pose.pose.orientation.x, pose->pose.pose.orientation.y, pose->pose.pose.orientation.z};
 	robot_orientation = quaternion2euler(robot_quaternion);
 	odom_data_recived = true;
+
 }
 
 void TangentBugControl::cmd_timer_callback(){
@@ -188,7 +190,7 @@ void TangentBugControl::cmd_timer_callback(){
 	double angular_speed = 0;
 
 	// Executa o processamento do controle se tiverem chegado novas mensagens do laser
-	if(laser_data_recived){ //&& odom_data_recived){
+	if(laser_data_recived && odom_data_recived){
 
 		std::pair<double,double> nearest_point, first_point, last_point;            
 	
@@ -251,6 +253,7 @@ void TangentBugControl::cmd_timer_callback(){
 			
 		}
 
+		// troca de contexto goal_target -> O_target
 		if(crash && goal_target){
 			O_target = true;
 			goal_target = false;
@@ -307,6 +310,17 @@ void TangentBugControl::cmd_timer_callback(){
 			// Obtenção das velelocidades lineares e angulares por meio da lei de controle implementada
 			linear_speed = ((abs(Kp_Ld*phi) - abs(Kp_Ld*error_dw)) < LINEAR_SPEED_MAX*Kp_L) ? LINEAR_SPEED_MAX*Kp_L - abs(Kp_Ld*phi) - abs(Kp_Ld*error_dw) : 0;
 			angular_speed = ((phi*Kp_At + error_dw*Kp_Ad) < ANGULAR_SPEED_MAX) ? phi*Kp_At + error_dw*Kp_Ad : copysign(ANGULAR_SPEED_MAX,phi);
+
+			// Troca de contexto wall_follow -> goal_target
+			double goal_theta = getYaw(target);
+			double laser_theta = goal_theta - robot_orientation.yaw;
+			double laser_index = (laser_theta-laser_data->angle_min)/laser_data->angle_increment;
+			if(abs(laser_theta) < M_PI_2 && laser_index >= 0 && laser_index < laser_data->ranges.size()){
+				if(laser_data->ranges.at(laser_index) > RANGE_SCANNER){
+					wall_follow = false;
+					goal_target = true;
+				}
+			}
 		}
 
 		// Navegação em linha reta para o destino (m-line)
@@ -314,13 +328,23 @@ void TangentBugControl::cmd_timer_callback(){
 			RCLCPP_INFO(this->get_logger(), "Navigate to goal.");
 
 			double error_linear = distPoints(robot_point,target);
-			double error_angular = abs(getYaw(target)-robot_orientation.yaw); 
-
-			error_angular = ((getYaw(target) > robot_orientation.yaw && error_angular > M_PI) || (robot_orientation.yaw < getYaw(target) && error_angular < M_PI)) ? -error_angular : error_angular;
+			double error_angular = (getYaw(robot_point,target)-robot_orientation.yaw); 
 
 			// Obtenção das velelocidades lineares e angulares por meio da lei de controle implementada
 			linear_speed = error_linear*Kp_L - error_angular*Kp_Ld;
 			angular_speed = error_angular*Kp_A;
+
+			std::cout << "target: " << getYaw(target) << std::endl
+					  << "robot: " << robot_orientation.yaw << std::endl
+					  << "error_angular: " << error_angular << std::endl
+					  << "error_angular2: " << getYaw(robot_point,target) << std::endl
+					  << "angular_speed: " << angular_speed << std::endl
+					  << std::endl;
+
+			if(error_linear < 0.5){
+				linear_speed = 0;
+				angular_speed = 0;
+			}
 
 			// Saturadores
 			if(linear_speed > LINEAR_SPEED_MAX)
@@ -339,9 +363,7 @@ void TangentBugControl::cmd_timer_callback(){
 			Descontinuidade O = desc.top();
 
 			double error_linear = distPoints(robot_point,O.ponto);
-			double error_angular = abs(getYaw(O.ponto)-robot_orientation.yaw); 
-
-			error_angular = ((getYaw(O.ponto) > robot_orientation.yaw && error_angular > M_PI) || (robot_orientation.yaw < getYaw(O.ponto) && error_angular < M_PI)) ? -error_angular : error_angular;
+			double error_angular = (getYaw(robot_point,O.ponto)-robot_orientation.yaw); 
 
 			// Obtenção das velelocidades lineares e angulares por meio da lei de controle implementada
 			linear_speed = error_linear*Kp_L - error_angular*Kp_Ld;
@@ -355,6 +377,12 @@ void TangentBugControl::cmd_timer_callback(){
 
 			if(abs(angular_speed) > ANGULAR_SPEED_MAX)
 				angular_speed = copysign(ANGULAR_SPEED_MAX,angular_speed);
+
+			// Troca de contexto O_target -> wall_follow
+			if(error_linear < 0.5){
+				O_target = false;
+				wall_follow = true;
+			}
 		}
 
 
