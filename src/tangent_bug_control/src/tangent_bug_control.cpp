@@ -1,3 +1,12 @@
+// @toffanetto
+// 						  Exercício 5 -- Tangent Bug
+// Autor: Gabriel Toffanetto França da Rocha
+// Professor: André Chaves Magalhâes
+// Federal University of Itajubá
+// 2022.2
+////////////////////////////////////////////////////////////////////////////////
+
+
 #include <cstdio>
 #include <cstdlib>
 #include <memory>
@@ -20,14 +29,14 @@ using namespace std::chrono_literals;
 #define LINEAR_SPEED_MAX 1.0
 #define ANGULAR_SPEED_MAX 1.0
 #define Kp_L 0.1
-#define Kp_Ld 0.1
+#define Kp_Ld 0.3
 #define Kp_Lw 0.8
-#define Kp_A 0.5
+#define Kp_A 0.8
 #define Kp_At 0.5
 #define Kp_Ad 0.2
 
 #define RANGE_CRASH 3
-#define RANGE_SCANNER 8
+#define RANGE_SCANNER 7
 #define ROBOT_WIDTH 0.84
 #define WALL_DISTANCE 1
 
@@ -356,19 +365,14 @@ void TangentBugControl::cmd_timer_callback(){
 
 
 			// Obtenção das velelocidades lineares e angulares por meio da lei de controle implementada
-			linear_speed = ((abs(Kp_Ld*phi) - abs(Kp_Ld*error_dw)) < LINEAR_SPEED_MAX*Kp_Lw) ? LINEAR_SPEED_MAX*Kp_Lw/2 - abs(Kp_Ld*phi) - abs(Kp_Ld*error_dw) : 0;
-			angular_speed = (abs(phi*Kp_At + error_dw*Kp_Ad) < ANGULAR_SPEED_MAX) ? phi*Kp_At/2 + error_dw*Kp_Ad/2 : copysign(ANGULAR_SPEED_MAX,phi);
+			linear_speed = ((abs(Kp_Ld*phi) - abs(Kp_Ld*error_dw)) < LINEAR_SPEED_MAX*Kp_Lw) ? LINEAR_SPEED_MAX*Kp_Lw - abs(Kp_Ld*phi) - abs(Kp_Ld*error_dw) : 0;
+			angular_speed = (abs(phi*Kp_At + error_dw*Kp_Ad) < ANGULAR_SPEED_MAX) ? phi*Kp_At + error_dw*Kp_Ad : copysign(ANGULAR_SPEED_MAX,phi);
 			
 			// Troca de contexto wall_follow -> goal_target
 
-			double goal_theta = getYaw(target);
-			double laser_theta = goal_theta - robot_orientation.yaw;
-			double laser_index = (laser_theta-laser_data->angle_min)/laser_data->angle_increment;
-			if(abs(laser_theta) < M_PI_2 && laser_index >= 0 && laser_index < laser_data->ranges.size()){
-				if(laser_data->ranges.at(laser_index) > RANGE_SCANNER){
+			if(getYaw(robot_point,target)-robot_orientation.yaw < 0.01 && laser_data->ranges.at(int(laser_data->ranges.size())/2) > RANGE_SCANNER && !crash){
 					wall_follow = false;
 					goal_target = true;
-				}
 			}
 		}
 
@@ -388,7 +392,7 @@ void TangentBugControl::cmd_timer_callback(){
 				RCLCPP_INFO(this->get_logger(), "Reached goal.");
 			}
 			else{
-				RCLCPP_INFO(this->get_logger(), "Navigate to goal.");
+				RCLCPP_INFO(this->get_logger(), "Navigating to goal.");
 			}
 
 			// Saturadores
@@ -403,41 +407,51 @@ void TangentBugControl::cmd_timer_callback(){
 
 		// Navegação para uma descontinuidade
 		if(O_target){
-			RCLCPP_INFO(this->get_logger(), "Navigate to discontinuity.");
+			RCLCPP_INFO(this->get_logger(), "Navigating to discontinuity.");
 
-			Descontinuidade O = desc.front();
-
-			double error_linear = distPoints(robot_point,O.ponto);
-			double error_angular = (getYaw(robot_point,O.ponto)-robot_orientation.yaw); 
-
-
-			std::cout << "            x: " << O.ponto.x << std::endl
-					  << "            y: " << O.ponto.y << std::endl
-					  << " error_linear: " << error_linear << std::endl
-					  << "error_angular: " << error_angular << std::endl;
-
-			for(auto &point : desc){
-				std::cout << point.ponto.x << " " << point.ponto.y << " " << point.d << std::endl;
-			}
-			std::cout << std::endl;
-
-			// Obtenção das velelocidades lineares e angulares por meio da lei de controle implementada
-			linear_speed = error_linear*Kp_L/2 - error_angular*Kp_Ld + 0.2;
-			angular_speed = error_angular*Kp_A/2;
-
-			// Saturadores
-			if(linear_speed > LINEAR_SPEED_MAX)
-				linear_speed = LINEAR_SPEED_MAX;
-			else if(linear_speed < 0)
-				linear_speed = 0;
-
-			if(abs(angular_speed) > ANGULAR_SPEED_MAX)
-				angular_speed = copysign(ANGULAR_SPEED_MAX,angular_speed);
-
-			// Troca de contexto O_target -> wall_follow
-			if(error_linear < 0.2){
+			if(desc.empty()){
 				O_target = false;
 				wall_follow = true;
+			}
+			else{
+				Descontinuidade O = desc.front();
+
+				RCLCPP_WARN(this->get_logger(), "1");
+
+				double error_linear = distPoints(robot_point,O.ponto);
+				double error_angular = (getYaw(robot_point,O.ponto)-robot_orientation.yaw); 
+
+				RCLCPP_WARN(this->get_logger(), "2");
+
+
+				std::cout << "            x: " << O.ponto.x << std::endl
+						<< "            y: " << O.ponto.y << std::endl
+						<< " error_linear: " << error_linear << std::endl
+						<< "error_angular: " << error_angular << std::endl;
+
+				for(auto &point : desc){
+					std::cout << point.ponto.x << " " << point.ponto.y << " " << point.d << std::endl;
+				}
+				std::cout << std::endl;
+
+				// Obtenção das velelocidades lineares e angulares por meio da lei de controle implementada
+				linear_speed = error_linear*Kp_L - error_angular*Kp_Ld + 0.2;
+				angular_speed = error_angular*Kp_A;
+
+				// Saturadores
+				if(linear_speed > LINEAR_SPEED_MAX)
+					linear_speed = LINEAR_SPEED_MAX;
+				else if(linear_speed < 0)
+					linear_speed = 0;
+
+				if(abs(angular_speed) > ANGULAR_SPEED_MAX)
+					angular_speed = copysign(ANGULAR_SPEED_MAX,angular_speed);
+
+				// Troca de contexto O_target -> wall_follow
+				if(error_linear < 0.2){
+					O_target = false;
+					wall_follow = true;
+				}
 			}
 		}
 
@@ -450,7 +464,6 @@ void TangentBugControl::cmd_timer_callback(){
 		laser_data_recived = false;
 		odom_data_recived = false;
 	}
-
 	else{
 		if(!laser_data_recived)
 			RCLCPP_WARN(this->get_logger(), "No data recived from LaserScan yet.");

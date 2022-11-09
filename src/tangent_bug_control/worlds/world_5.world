@@ -15,7 +15,14 @@
     </include>
 
     <include>
-      <uri>model://U</uri>
+      <uri>model://armadilha</uri><pose>
+      10
+      0
+      0
+      0
+      0
+      0
+      </pose>
     </include>
   </world>
 </sdf>
