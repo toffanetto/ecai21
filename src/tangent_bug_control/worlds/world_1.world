@@ -14,7 +14,7 @@
       <uri>model://dolly</uri>
     </include>
 
-    <!--include>
+    <include>
       <uri>model://amb1</uri><pose>
       18.21
       2.25
@@ -23,7 +23,7 @@
       0
       -0.334
       </pose>
-    </include-->
+    </include>
   </world>
 </sdf>
 

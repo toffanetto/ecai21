@@ -21,11 +21,12 @@ using namespace std::chrono_literals;
 #define ANGULAR_SPEED_MAX 1.0
 #define Kp_L 0.1
 #define Kp_Ld 0.1
+#define Kp_Lw 0.8
 #define Kp_A 0.8
 #define Kp_At 0.5
 #define Kp_Ad 0.2
 
-#define RANGE_CRASH 4
+#define RANGE_CRASH 3
 #define RANGE_SCANNER 8
 #define ROBOT_WIDTH 0.84
 #define WALL_DISTANCE 1
@@ -161,7 +162,7 @@ class TangentBugControl : public rclcpp::Node{
 		bool O_target = false;
 		bool goal_target = true;
 
-		Ponto target = {10,10,0};
+		Ponto target = {40,0,0};
 		Ponto robot_point;
 		Euler robot_orientation;
 
@@ -194,9 +195,9 @@ void TangentBugControl::cmd_timer_callback(){
 
 		std::pair<double,double> nearest_point, first_point, last_point;            
 	
-		bool first=true, crash = false;
+		bool first=true, crash = false, obstacle = false;
 
-		double theta, phi, error_dw = 0;
+		double theta = 0, phi = 0, error_dw = 0;
 		int near_index = 0;
 		
 		auto cmp = [](Descontinuidade left, Descontinuidade right) { return (left.d) > (right.d); };
@@ -214,6 +215,8 @@ void TangentBugControl::cmd_timer_callback(){
 
 			// Caso o range medido for menor que o raio de detecção de objeto estipulado
 			if(range <= RANGE_CRASH){
+
+				obstacle = true;
 				
 				// Armazena a primeira posição do obstáculo
 				if(first){ // Inicio da detecção de obstáculo
@@ -221,6 +224,7 @@ void TangentBugControl::cmd_timer_callback(){
 					nearest_point = first_point;
 					last_point = first_point;
 					near_index = i;
+					first = false;
 				}
 
 				// Armazena o ponto mais próximo do obstáculo
@@ -242,8 +246,8 @@ void TangentBugControl::cmd_timer_callback(){
 			if(i >= 1){
 				if(abs(laser_data->ranges.at(i)-laser_data->ranges.at(i-1))>1){
 					Descontinuidade Oi;
-					Oi.ponto.x = laser_data->ranges.at(i-1)*cos((i-1)*laser_data->angle_increment + laser_data->angle_min);
-					Oi.ponto.y = laser_data->ranges.at(i-1)*sin((i-1)*laser_data->angle_increment + laser_data->angle_min);
+					Oi.ponto.x = (laser_data->ranges.at(i-1)-1.5)*cos((i-1)*laser_data->angle_increment + laser_data->angle_min);
+					Oi.ponto.y = (laser_data->ranges.at(i-1)-1.5)*sin((i-1)*laser_data->angle_increment + laser_data->angle_min);
 					Oi.d = distPoints(Oi.ponto,target) + distPoints(robot_point,target);
 
 					desc.push(Oi);
@@ -263,54 +267,56 @@ void TangentBugControl::cmd_timer_callback(){
 		if(wall_follow){
 			RCLCPP_INFO(this->get_logger(), "Wall following.");
 
-			if(nearest_point.second == last_point.second && near_index >= 1){
+			if(obstacle){
+
+				if(nearest_point.second == last_point.second && near_index >= 1){
+					
+					double x1,y1,x2,y2,xr,yr;
+
+					x1 = laser_data->ranges.at(near_index)*cos(near_index*laser_data->angle_increment + laser_data->angle_min);
+					y1 = laser_data->ranges.at(near_index)*sin(near_index*laser_data->angle_increment + laser_data->angle_min);
+					x2 = laser_data->ranges.at(near_index-1)*cos((near_index-1)*laser_data->angle_increment + laser_data->angle_min);
+					y2 = laser_data->ranges.at(near_index-1)*sin((near_index-1)*laser_data->angle_increment + laser_data->angle_min);
+
+					xr = x2-x1;
+					yr = y2-y1;
+
+					Ponto Vr0 = {xr,yr,0};
+
+					phi = getYaw(Vr0);
+				}
+				else{
+					double x1,y1,x2,y2,xr,yr;
+
+					x1 = laser_data->ranges.at(near_index)*cos(near_index*laser_data->angle_increment + laser_data->angle_min);
+					y1 = laser_data->ranges.at(near_index)*sin(near_index*laser_data->angle_increment + laser_data->angle_min);
+					x2 = laser_data->ranges.at(near_index+1)*cos((near_index+1)*laser_data->angle_increment + laser_data->angle_min);
+					y2 = laser_data->ranges.at(near_index+1)*sin((near_index+1)*laser_data->angle_increment + laser_data->angle_min);
+
+					xr = x2-x1;
+					yr = y2-y1;
+
+					Ponto Vr0 = {xr,yr,0};
+
+					phi = getYaw(Vr0);
+				}
+
+				error_dw = (near_index < int(laser_data->ranges.size())/2) ?  -(nearest_point.first-WALL_DISTANCE) : (nearest_point.first-WALL_DISTANCE);
 				
-				double x1,y1,x2,y2,xr,yr;
-
-				x1 = laser_data->ranges.at(near_index)*cos(near_index*laser_data->angle_increment + laser_data->angle_min);
-				y1 = laser_data->ranges.at(near_index)*sin(near_index*laser_data->angle_increment + laser_data->angle_min);
-				x2 = laser_data->ranges.at(near_index-1)*cos((near_index-1)*laser_data->angle_increment + laser_data->angle_min);
-				y2 = laser_data->ranges.at(near_index-1)*sin((near_index-1)*laser_data->angle_increment + laser_data->angle_min);
-
-				xr = x2-x1;
-				yr = y2-y1;
-
-				Ponto Vr0 = {xr,yr,0};
-
-				phi = getYaw(Vr0);
-			}
-			else{
-				double x1,y1,x2,y2,xr,yr;
-
-				x1 = laser_data->ranges.at(near_index)*cos(near_index*laser_data->angle_increment + laser_data->angle_min);
-				y1 = laser_data->ranges.at(near_index)*sin(near_index*laser_data->angle_increment + laser_data->angle_min);
-				x2 = laser_data->ranges.at(near_index+1)*cos((near_index+1)*laser_data->angle_increment + laser_data->angle_min);
-				y2 = laser_data->ranges.at(near_index+1)*sin((near_index+1)*laser_data->angle_increment + laser_data->angle_min);
-
-				xr = x2-x1;
-				yr = y2-y1;
-
-				Ponto Vr0 = {xr,yr,0};
-
-				phi = getYaw(Vr0);
 			}
 
-			if(nearest_point.first > WALL_DISTANCE){
-				error_dw = nearest_point.first-WALL_DISTANCE;
-			}
-			else if(nearest_point.first < WALL_DISTANCE){
-				error_dw = nearest_point.first-WALL_DISTANCE;
-			}
-
-			if(near_index < int(laser_data->ranges.size())/2){
-				phi -= M_PI;
-				error_dw *= -1;
-			}
 
 			// Obtenção das velelocidades lineares e angulares por meio da lei de controle implementada
-			linear_speed = ((abs(Kp_Ld*phi) - abs(Kp_Ld*error_dw)) < LINEAR_SPEED_MAX*Kp_L) ? LINEAR_SPEED_MAX*Kp_L - abs(Kp_Ld*phi) - abs(Kp_Ld*error_dw) : 0;
-			angular_speed = ((phi*Kp_At + error_dw*Kp_Ad) < ANGULAR_SPEED_MAX) ? phi*Kp_At + error_dw*Kp_Ad : copysign(ANGULAR_SPEED_MAX,phi);
+			linear_speed = ((abs(Kp_Ld*phi) - abs(Kp_Ld*error_dw)) < LINEAR_SPEED_MAX*Kp_Lw) ? LINEAR_SPEED_MAX*Kp_Lw - abs(Kp_Ld*phi) - abs(Kp_Ld*error_dw) : 0;
+			angular_speed = (abs(phi*Kp_At + error_dw*Kp_Ad) < ANGULAR_SPEED_MAX) ? phi*Kp_At + error_dw*Kp_Ad : copysign(ANGULAR_SPEED_MAX,phi);
 
+					std::cout << "phi: " << phi << std::endl
+							<< "error_dw: " << error_dw << std::endl
+							<< "linear_speed: " << linear_speed << std::endl
+							<< "angular_speed: " << angular_speed << std::endl
+							<< "near_index: " << near_index << std::endl;
+
+			
 			// Troca de contexto wall_follow -> goal_target
 			double goal_theta = getYaw(target);
 			double laser_theta = goal_theta - robot_orientation.yaw;
@@ -333,13 +339,6 @@ void TangentBugControl::cmd_timer_callback(){
 			// Obtenção das velelocidades lineares e angulares por meio da lei de controle implementada
 			linear_speed = error_linear*Kp_L - error_angular*Kp_Ld;
 			angular_speed = error_angular*Kp_A;
-
-			std::cout << "target: " << getYaw(target) << std::endl
-					  << "robot: " << robot_orientation.yaw << std::endl
-					  << "error_angular: " << error_angular << std::endl
-					  << "error_angular2: " << getYaw(robot_point,target) << std::endl
-					  << "angular_speed: " << angular_speed << std::endl
-					  << std::endl;
 
 			if(error_linear < 0.5){
 				linear_speed = 0;
