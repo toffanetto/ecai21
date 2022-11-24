@@ -7,6 +7,8 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 
+
+
 #include <cstdio>
 #include <cstdlib>
 #include <memory>
@@ -424,7 +426,7 @@ void TangentBugControl::cmd_timer_callback(){
 				RCLCPP_WARN(this->get_logger(), "2");
 
 
-				std::cout << "            x: " << O.ponto.x << std::endl
+				std::cout << "          x: " << O.ponto.x << std::endl
 						<< "            y: " << O.ponto.y << std::endl
 						<< " error_linear: " << error_linear << std::endl
 						<< "error_angular: " << error_angular << std::endl;

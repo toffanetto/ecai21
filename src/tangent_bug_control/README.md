@@ -15,7 +15,7 @@ source /usr/share/gazebo/setup.sh
 
 source install/source.bash
 
-ros2 launch tangent_bug_control reactivetangent_bug_control_control.py
+ros2 launch tangent_bug_control tangent_bug_control_control.py
 ```
 
 ## Dependências

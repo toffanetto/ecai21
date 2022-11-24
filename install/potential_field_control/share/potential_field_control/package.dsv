@@ -1,0 +1,8 @@
+source;share/potential_field_control/hook/cmake_prefix_path.ps1
+source;share/potential_field_control/hook/cmake_prefix_path.dsv
+source;share/potential_field_control/hook/cmake_prefix_path.sh
+source;share/potential_field_control/local_setup.bash
+source;share/potential_field_control/local_setup.dsv
+source;share/potential_field_control/local_setup.ps1
+source;share/potential_field_control/local_setup.sh
+source;share/potential_field_control/local_setup.zsh
