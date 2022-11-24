@@ -200,6 +200,11 @@ void PotentialFieldControl::getPose(double range, double theta, Ponto &obstacle)
 	// Referencial global
 	obstacle.x = (xr*cos(robot_orientation.yaw) - yr*sin(robot_orientation.yaw)) + robot_point.x + LIDAR_X;
 	obstacle.y = (xr*sin(robot_orientation.yaw) + yr*cos(robot_orientation.yaw)) + robot_point.y + LIDAR_Y;
+
+	std::cout 	<< "Obstacle:  x = " << obstacle.x << std::endl
+				<< "      	     = " << obstacle.y << std::endl
+				<< "       theta = " << theta << std::endl
+				<< "       range = " << range << std::endl;
 }
 
 void PotentialFieldControl::getFr(Ponto obstacle, Ponto &Fr){ // y = 2
@@ -293,8 +298,8 @@ void PotentialFieldControl::cmd_timer_callback(){
 				  << "      y = " << robot_point.y << std::endl
 				  << "    yaw = " << robot_orientation.yaw << std::endl;
 
-		cmd_msg->linear.x = (abs(linear_speed) > LINEAR_SPEED_MAX) ? copysign(LINEAR_SPEED_MAX,linear_speed) : linear_speed;
-		cmd_msg->angular.z = (abs(angular_speed) > ANGULAR_SPEED_MAX) ? copysign(ANGULAR_SPEED_MAX,angular_speed) : angular_speed;
+		//cmd_msg->linear.x = (abs(linear_speed) > LINEAR_SPEED_MAX) ? copysign(LINEAR_SPEED_MAX,linear_speed) : linear_speed;
+		//cmd_msg->angular.z = (abs(angular_speed) > ANGULAR_SPEED_MAX) ? copysign(ANGULAR_SPEED_MAX,angular_speed) : angular_speed;
 
 		cmd_pub->publish(std::move(cmd_msg));
 
