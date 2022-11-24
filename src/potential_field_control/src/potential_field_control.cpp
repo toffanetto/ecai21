@@ -33,6 +33,7 @@ using namespace std::chrono_literals;
 #define LINEAR_SPEED_MAX 1.0
 #define ANGULAR_SPEED_MAX 1.0
 #define Kp_L 0.5
+#define Kp_Ld 0.4
 #define Kp_A 0.8
 
 #define K_ATT 0.5
@@ -211,7 +212,7 @@ void PotentialFieldControl::getFr(Ponto obstacle, Ponto &Fr){ // y = 2
 	
 }
 
-void PotentialFieldControl::getFatt(Ponto goal, Ponto &Fatt){
+void PotentialFieldControl::getFatt(Ponto goal, Ponto &Fatt){ // Cálculo da força de atração utilizando campo parabólico
 	Fatt.x = (goal.x - robot_point.x)*K_ATT;
 	Fatt.y = (goal.y - robot_point.y)*K_ATT;
 }
@@ -283,7 +284,7 @@ void PotentialFieldControl::cmd_timer_callback(){
 		double Fres_ang = getYaw(Fres);
 		double angle_error = Fres_ang - robot_orientation.yaw;
 
-		linear_speed = Fres_mag*Kp_L;
+		linear_speed = Fres_mag*Kp_L - abs(angle_error*Kp_Ld);
 		angular_speed = angle_error*Kp_A;
 
 		if(distPoints(robot_point,target) < 0.2){
@@ -298,8 +299,17 @@ void PotentialFieldControl::cmd_timer_callback(){
 				  << "      y = " << robot_point.y << std::endl
 				  << "    yaw = " << robot_orientation.yaw << std::endl;
 
-		//cmd_msg->linear.x = (abs(linear_speed) > LINEAR_SPEED_MAX) ? copysign(LINEAR_SPEED_MAX,linear_speed) : linear_speed;
-		//cmd_msg->angular.z = (abs(angular_speed) > ANGULAR_SPEED_MAX) ? copysign(ANGULAR_SPEED_MAX,angular_speed) : angular_speed;
+		// Saturadores
+		if(linear_speed > LINEAR_SPEED_MAX)
+			linear_speed = LINEAR_SPEED_MAX;
+		else if(linear_speed < 0)
+			linear_speed = 0;
+
+		if(abs(angular_speed) > ANGULAR_SPEED_MAX)
+			angular_speed = copysign(ANGULAR_SPEED_MAX,angular_speed);
+
+		cmd_msg->linear.x = (abs(linear_speed) > LINEAR_SPEED_MAX) ? copysign(LINEAR_SPEED_MAX,linear_speed) : linear_speed;
+		cmd_msg->angular.z = (abs(angular_speed) > ANGULAR_SPEED_MAX) ? copysign(ANGULAR_SPEED_MAX,angular_speed) : angular_speed;
 
 		cmd_pub->publish(std::move(cmd_msg));
 
