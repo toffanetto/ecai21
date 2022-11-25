@@ -6,9 +6,6 @@
 // 2022.2
 ////////////////////////////////////////////////////////////////////////////////
 
-
-
-
 #include <cstdio>
 #include <cstdlib>
 #include <memory>
@@ -27,24 +24,21 @@ using std::placeholders::_1;
 
 using namespace std::chrono_literals;
 
-#define TARGET_X 10
-#define TARGET_Y 10
+#define TARGET_X 40
+#define TARGET_Y 0
 
-#define LINEAR_SPEED_MAX 1.0
-#define ANGULAR_SPEED_MAX 1.0
-#define Kp_L 0.5
-#define Kp_Ld 0.4
-#define Kp_A 0.8
+#define LINEAR_SPEED_MAX 0.5
+#define ANGULAR_SPEED_MAX 0.5
+#define Kp_L 0.3
+#define Kp_Ld 0.2
+#define Kp_A 0.2
 
-#define K_ATT 0.5
-#define K_REP 0.5
+#define K_ATT 0.3
+#define K_REP 0.4
 #define P0 5
 
 #define LIDAR_X 0.5
 #define LIDAR_Y 0
-
-
-
 
 ////////////////////////////////////////////////////////////////////////////////
 // Structs and classes to new data types
@@ -203,13 +197,15 @@ void PotentialFieldControl::getPose(double range, double theta, Ponto &obstacle)
 	obstacle.y = (xr*sin(robot_orientation.yaw) + yr*cos(robot_orientation.yaw)) + robot_point.y + LIDAR_Y;
 
 	std::cout 	<< "Obstacle:  x = " << obstacle.x << std::endl
-				<< "      	     = " << obstacle.y << std::endl
+				<< "           y = " << obstacle.y << std::endl
 				<< "       theta = " << theta << std::endl
 				<< "       range = " << range << std::endl;
 }
 
 void PotentialFieldControl::getFr(Ponto obstacle, Ponto &Fr){ // y = 2
-	
+	double p_i = distPoints(obstacle,robot_point);
+	Fr.x = K_REP*(p_i*p_i)*(1/(p_i) - 1/(P0))*(robot_point.x - obstacle.x);
+	Fr.y = K_REP*(p_i*p_i)*(1/(p_i) - 1/(P0))*(robot_point.y - obstacle.y);
 }
 
 void PotentialFieldControl::getFatt(Ponto goal, Ponto &Fatt){ // Cálculo da força de atração utilizando campo parabólico
@@ -252,9 +248,6 @@ void PotentialFieldControl::cmd_timer_callback(){
 
 		getFatt(target,Fatt);
 
-		std::cout << "Fatt: x = " << Fatt.x << std::endl
-				  << "      y = " << Fatt.y << std::endl;
-
 		F.push_back(Fatt);
 		     
 		// Processamento dos dados do vetor de pontos do laser
@@ -280,6 +273,7 @@ void PotentialFieldControl::cmd_timer_callback(){
 
 		getFres(F,Fres);
 
+
 		double Fres_mag = getMag(Fres);
 		double Fres_ang = getYaw(Fres);
 		double angle_error = Fres_ang - robot_orientation.yaw;
@@ -293,11 +287,15 @@ void PotentialFieldControl::cmd_timer_callback(){
 			RCLCPP_INFO(this->get_logger(), "Reached the destination.");
 		}
 
-		std::cout << "Mov:  linear = " << linear_speed << std::endl
+		std::cout << "Fatt: x = " << Fatt.x << std::endl
+				  << "      y = " << Fatt.y << std::endl
+				  << "Fres: x = " << Fres.x << std::endl
+				  << "      y = " << Fres.y << std::endl
+				  << "Mov:  linear = " << linear_speed << std::endl
 				  << "     angular = " << angular_speed << std::endl
-				  << "Pose: x = " << robot_point.x << std::endl
-				  << "      y = " << robot_point.y << std::endl
-				  << "    yaw = " << robot_orientation.yaw << std::endl;
+				  << "Pose:      x = " << robot_point.x << std::endl
+				  << "           y = " << robot_point.y << std::endl
+				  << "         yaw = " << robot_orientation.yaw << std::endl;
 
 		// Saturadores
 		if(linear_speed > LINEAR_SPEED_MAX)

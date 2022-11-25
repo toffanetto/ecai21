@@ -41,7 +41,7 @@ def generate_launch_description():
     return LaunchDescription([
         DeclareLaunchArgument(
           'world',
-          default_value=[os.path.join(pkg_potential_field_control, 'worlds', 'world_1.world'), ''],
+          default_value=[os.path.join(pkg_potential_field_control, 'worlds', 'world_2.world'), ''],
           description='SDF world file'),
         DeclareLaunchArgument('rviz', default_value='true',
                               description='Open RViz.'),

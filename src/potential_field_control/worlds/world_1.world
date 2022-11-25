@@ -13,6 +13,17 @@
     <include>
       <uri>model://dolly</uri>
     </include>
+
+    <include>
+      <uri>model://casual_female</uri><pose>
+      8
+      8
+      0
+      0
+      0
+      0
+      </pose>
+    </include>
   </world>
 </sdf>
 
