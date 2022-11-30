@@ -24,18 +24,21 @@ using std::placeholders::_1;
 
 using namespace std::chrono_literals;
 
+////////////////////////////////////////////////////////////////////////////////
+// Constants
+
 #define TARGET_X 40
 #define TARGET_Y 0
 
-#define LINEAR_SPEED_MAX 0.5
-#define ANGULAR_SPEED_MAX 0.5
-#define Kp_L 0.3
+#define LINEAR_SPEED_MAX 1.0
+#define ANGULAR_SPEED_MAX 1.0
+#define Kp_L 0.2
 #define Kp_Ld 0.2
 #define Kp_A 0.2
 
 #define K_ATT 0.3
-#define K_REP 0.4
-#define P0 5
+#define K_REP 1
+#define P0 3
 
 #define LIDAR_X 0.5
 #define LIDAR_Y 0
@@ -178,9 +181,7 @@ class PotentialFieldControl : public rclcpp::Node{
 		Ponto target = {TARGET_X,TARGET_Y,0};
 		Ponto robot_point;
 		Euler robot_orientation;
-
 };
-
 
 void PotentialFieldControl::laser_callback(const sensor_msgs::msg::LaserScan::SharedPtr scan){
 	laser_data = scan;
@@ -204,8 +205,8 @@ void PotentialFieldControl::getPose(double range, double theta, Ponto &obstacle)
 
 void PotentialFieldControl::getFr(Ponto obstacle, Ponto &Fr){ // y = 2
 	double p_i = distPoints(obstacle,robot_point);
-	Fr.x = K_REP*(p_i*p_i)*(1/(p_i) - 1/(P0))*(robot_point.x - obstacle.x);
-	Fr.y = K_REP*(p_i*p_i)*(1/(p_i) - 1/(P0))*(robot_point.y - obstacle.y);
+	Fr.x = K_REP*1/(p_i*p_i*p_i)*(1/(p_i) - 1/(P0))*(robot_point.x - obstacle.x);
+	Fr.y = K_REP*1/(p_i*p_i*p_i)*(1/(p_i) - 1/(P0))*(robot_point.y - obstacle.y);
 }
 
 void PotentialFieldControl::getFatt(Ponto goal, Ponto &Fatt){ // Cálculo da força de atração utilizando campo parabólico
@@ -222,7 +223,6 @@ void PotentialFieldControl::getFres(std::vector<Ponto> F, Ponto &Fres){
 		Fres.y += Fi.y;
 	}
 }
-
 
 void PotentialFieldControl::odom_callback(const nav_msgs::msg::Odometry::SharedPtr pose){ 	
 	robot_point = {pose->pose.pose.position.x, pose->pose.pose.position.y, pose->pose.pose.position.z};
@@ -287,10 +287,10 @@ void PotentialFieldControl::cmd_timer_callback(){
 			RCLCPP_INFO(this->get_logger(), "Reached the destination.");
 		}
 
-		std::cout << "Fatt: x = " << Fatt.x << std::endl
-				  << "      y = " << Fatt.y << std::endl
-				  << "Fres: x = " << Fres.x << std::endl
-				  << "      y = " << Fres.y << std::endl
+		std::cout << "Fatt: 	 x = " << Fatt.x << std::endl
+				  << "      	 y = " << Fatt.y << std::endl
+				  << "Fres:		 x = " << Fres.x << std::endl
+				  << "      	 y = " << Fres.y << std::endl
 				  << "Mov:  linear = " << linear_speed << std::endl
 				  << "     angular = " << angular_speed << std::endl
 				  << "Pose:      x = " << robot_point.x << std::endl
