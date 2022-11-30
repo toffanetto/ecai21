@@ -183,11 +183,24 @@ class PotentialFieldControl : public rclcpp::Node{
 		Euler robot_orientation;
 };
 
+////////////////////////////////////////////////////////////////////////////////
+// LiDAR callback
 void PotentialFieldControl::laser_callback(const sensor_msgs::msg::LaserScan::SharedPtr scan){
 	laser_data = scan;
 	laser_data_recived = true;
 }
 
+////////////////////////////////////////////////////////////////////////////////
+// Odometry callback
+void PotentialFieldControl::odom_callback(const nav_msgs::msg::Odometry::SharedPtr pose){ 	
+	robot_point = {pose->pose.pose.position.x, pose->pose.pose.position.y, pose->pose.pose.position.z};
+	Quaternion robot_quaternion = {pose->pose.pose.orientation.w, pose->pose.pose.orientation.x, pose->pose.pose.orientation.y, pose->pose.pose.orientation.z};
+	robot_orientation = quaternion2euler(robot_quaternion);
+	odom_data_recived = true;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// Method to get the pose of a obstacle by LiDAR data
 void PotentialFieldControl::getPose(double range, double theta, Ponto &obstacle){
 	// Referencial do robô
 	double xr = range*cos(theta);
@@ -203,17 +216,23 @@ void PotentialFieldControl::getPose(double range, double theta, Ponto &obstacle)
 				<< "       range = " << range << std::endl;
 }
 
+////////////////////////////////////////////////////////////////////////////////
+// Method to get repulsive force vector
 void PotentialFieldControl::getFr(Ponto obstacle, Ponto &Fr){ // y = 2
 	double p_i = distPoints(obstacle,robot_point);
 	Fr.x = K_REP*1/(p_i*p_i*p_i)*(1/(p_i) - 1/(P0))*(robot_point.x - obstacle.x);
 	Fr.y = K_REP*1/(p_i*p_i*p_i)*(1/(p_i) - 1/(P0))*(robot_point.y - obstacle.y);
 }
 
+////////////////////////////////////////////////////////////////////////////////
+// Method to get atractive force vector
 void PotentialFieldControl::getFatt(Ponto goal, Ponto &Fatt){ // Cálculo da força de atração utilizando campo parabólico
 	Fatt.x = (goal.x - robot_point.x)*K_ATT;
 	Fatt.y = (goal.y - robot_point.y)*K_ATT;
 }
 
+////////////////////////////////////////////////////////////////////////////////
+// Method to get resultant force vector
 void PotentialFieldControl::getFres(std::vector<Ponto> F, Ponto &Fres){
 	Fres.x = 0;
 	Fres.y = 0;
@@ -224,15 +243,11 @@ void PotentialFieldControl::getFres(std::vector<Ponto> F, Ponto &Fres){
 	}
 }
 
-void PotentialFieldControl::odom_callback(const nav_msgs::msg::Odometry::SharedPtr pose){ 	
-	robot_point = {pose->pose.pose.position.x, pose->pose.pose.position.y, pose->pose.pose.position.z};
-	Quaternion robot_quaternion = {pose->pose.pose.orientation.w, pose->pose.pose.orientation.x, pose->pose.pose.orientation.y, pose->pose.pose.orientation.z};
-	robot_orientation = quaternion2euler(robot_quaternion);
-	odom_data_recived = true;
-}
-
+////////////////////////////////////////////////////////////////////////////////
+// Timer callback to process LiDAR and odometry data to get linear and angular speed 
 void PotentialFieldControl::cmd_timer_callback(){
-	// Processar laserscan e obter linear_speed e angular_speed
+	
+	std::cout << "|+++++++++++++++++++++++++++++++++|" << std::endl;
 
 
 	auto cmd_msg = std::make_unique<geometry_msgs::msg::Twist>();
@@ -288,7 +303,7 @@ void PotentialFieldControl::cmd_timer_callback(){
 
 		std::cout << "Fatt: 	 x = " << Fatt.x << std::endl
 				  << "      	 y = " << Fatt.y << std::endl
-				  << "Fres:		 x = " << Fres.x << std::endl
+				  << "Fres:      x = " << Fres.x << std::endl
 				  << "      	 y = " << Fres.y << std::endl
 				  << "Mov:  linear = " << linear_speed << std::endl
 				  << "     angular = " << angular_speed << std::endl
