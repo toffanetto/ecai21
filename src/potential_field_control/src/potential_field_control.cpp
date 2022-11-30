@@ -37,8 +37,8 @@ using namespace std::chrono_literals;
 #define Kp_A 0.2
 
 #define K_ATT 0.3
-#define K_REP 1
-#define P0 3
+#define K_REP 1.2
+#define P0 4
 
 #define LIDAR_X 0.5
 #define LIDAR_Y 0
@@ -266,7 +266,6 @@ void PotentialFieldControl::cmd_timer_callback(){
 				getFr(obstacle,Fr);
 				F.push_back(Fr);
 			}
-			
 		}
 
 		Ponto Fres;

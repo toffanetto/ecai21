@@ -24,8 +24,18 @@ colcon build --packages-select potential_field_control
 source /usr/share/gazebo/setup.sh
 
 source install/source.bash
+```
 
-ros2 launch potential_field_control potential_field_control.py
+Mapa com obstáculos:
+
+```
+ros2 launch potential_field_control potential_field_control_obstacles.py
+```
+
+Mapa com armadilha de mínimo local:
+
+```
+ros2 launch potential_field_control potential_field_control_armadilha.py
 ```
 
 ## Dependências
