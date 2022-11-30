@@ -29,13 +29,13 @@ source install/source.bash
 Mapa com obstáculos:
 
 ```
-ros2 launch potential_field_control potential_field_control_obstacles.py
+ros2 launch potential_field_control potential_field_control.py world:=world_4.world
 ```
 
 Mapa com armadilha de mínimo local:
 
 ```
-ros2 launch potential_field_control potential_field_control_armadilha.py
+ros2 launch potential_field_control potential_field_control.py world:=world_5.world
 ```
 
 ## Dependências
