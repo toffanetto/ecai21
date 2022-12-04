@@ -1,2 +1,0 @@
-prepend-non-duplicate;GAZEBO_MODEL_PATH;share/potential_field_control/models
-prepend-non-duplicate;GAZEBO_RESOURCE_PATH;share/potential_field_control/worlds
