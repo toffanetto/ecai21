@@ -24,9 +24,22 @@ colcon build --packages-select tangent_bug_control
 source /usr/share/gazebo/setup.sh
 
 source install/source.bash
-
-ros2 launch tangent_bug_control tangent_bug_control_control.py
 ```
+
+Mapa com obstáculos e solução:
+
+```
+ros2 launch tangent_bug_control tangent_bug_control_control.py world:=world_4.world
+```
+
+Mapa sem solução:
+
+```
+ros2 launch tangent_bug_control tangent_bug_control_control.py world:=world_6.world
+```
+
+
+
 
 ## Dependências
 

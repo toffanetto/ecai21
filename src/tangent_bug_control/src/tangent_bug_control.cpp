@@ -42,7 +42,7 @@ using namespace std::chrono_literals;
 #define ROBOT_WIDTH 0.84
 #define WALL_DISTANCE 1
 
-#define TARGET_X 15
+#define TARGET_X 20
 #define TARGET_Y 0
 
 
@@ -332,11 +332,11 @@ void TangentBugControl::cmd_timer_callback(){
 		if(wall_follow){
 			RCLCPP_INFO(this->get_logger(), "Wall following.");
 
-			if(distPoints(robot_point, O_follow) > 0.4){
+			if(distPoints(robot_point, O_follow) > 0.6){
 				wall_follow_init = false;
 			}
 
-			if(distPoints(robot_point, O_follow) < 0.3 && !wall_follow_init){
+			if(distPoints(robot_point, O_follow) < 0.5 && !wall_follow_init){
 				wall_follow = false;
 				no_solution = true;
 			}
