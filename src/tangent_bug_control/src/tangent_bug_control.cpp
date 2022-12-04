@@ -42,6 +42,9 @@ using namespace std::chrono_literals;
 #define ROBOT_WIDTH 0.84
 #define WALL_DISTANCE 1
 
+#define TARGET_X 15
+#define TARGET_Y 0
+
 
 ////////////////////////////////////////////////////////////////////////////////
 // Structs and classes to new data types
@@ -173,10 +176,14 @@ class TangentBugControl : public rclcpp::Node{
 		bool wall_follow = false;
 		bool O_target = false;
 		bool goal_target = true;
+		bool no_solution = false;
+		bool wall_follow_init = true;
+
+		Ponto O_follow;
 
 		std::vector<Descontinuidade> desc;
 
-		Ponto target = {40,0,0};
+		Ponto target = {TARGET_X,TARGET_Y,0};
 		Ponto robot_point;
 		Euler robot_orientation;
 
@@ -325,6 +332,15 @@ void TangentBugControl::cmd_timer_callback(){
 		if(wall_follow){
 			RCLCPP_INFO(this->get_logger(), "Wall following.");
 
+			if(distPoints(robot_point, O_follow) > 0.4){
+				wall_follow_init = false;
+			}
+
+			if(distPoints(robot_point, O_follow) < 0.3 && !wall_follow_init){
+				wall_follow = false;
+				no_solution = true;
+			}
+
 			if(obstacle){
 
 				if(nearest_point.second == last_point.second && near_index >= 1){
@@ -372,9 +388,10 @@ void TangentBugControl::cmd_timer_callback(){
 			
 			// Troca de contexto wall_follow -> goal_target
 
-			if(getYaw(robot_point,target)-robot_orientation.yaw < 0.01 && laser_data->ranges.at(int(laser_data->ranges.size())/2) > RANGE_SCANNER && !crash){
+			if(abs(getYaw(robot_point,target)-robot_orientation.yaw) < 0.01 && laser_data->ranges.at(int(laser_data->ranges.size())/2) > RANGE_SCANNER && !crash){
 					wall_follow = false;
 					goal_target = true;
+					wall_follow_init = true;
 			}
 		}
 
@@ -418,23 +435,8 @@ void TangentBugControl::cmd_timer_callback(){
 			else{
 				Descontinuidade O = desc.front();
 
-				RCLCPP_WARN(this->get_logger(), "1");
-
 				double error_linear = distPoints(robot_point,O.ponto);
 				double error_angular = (getYaw(robot_point,O.ponto)-robot_orientation.yaw); 
-
-				RCLCPP_WARN(this->get_logger(), "2");
-
-
-				std::cout << "          x: " << O.ponto.x << std::endl
-						<< "            y: " << O.ponto.y << std::endl
-						<< " error_linear: " << error_linear << std::endl
-						<< "error_angular: " << error_angular << std::endl;
-
-				for(auto &point : desc){
-					std::cout << point.ponto.x << " " << point.ponto.y << " " << point.d << std::endl;
-				}
-				std::cout << std::endl;
 
 				// Obtenção das velelocidades lineares e angulares por meio da lei de controle implementada
 				linear_speed = error_linear*Kp_L - error_angular*Kp_Ld + 0.2;
@@ -453,8 +455,15 @@ void TangentBugControl::cmd_timer_callback(){
 				if(error_linear < 0.2){
 					O_target = false;
 					wall_follow = true;
+					O_follow = O.ponto;
 				}
 			}
+		}
+
+		if(no_solution){
+			linear_speed = 0;
+			angular_speed = 0;
+			RCLCPP_ERROR(this->get_logger(), "Don't have a solution to reach the target.");
 		}
 
 
