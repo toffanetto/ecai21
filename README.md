@@ -2,7 +2,7 @@
 
 Mobile Robotics (ECAi21) subject's projects
 
-Professor: Dr. André Chaves Magalhães
+Professor: MsC. André Chaves Magalhães
 
 Tecnologic Sciences Institute -- Federal University of Itajubá - Campus Itabira
 
