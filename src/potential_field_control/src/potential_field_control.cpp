@@ -123,7 +123,7 @@ double getMag(Ponto point){
 }
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
-//                     Tanget Bug Control node class                            //
+//                     Potential Field Control node class                            //
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
 
 class PotentialFieldControl : public rclcpp::Node{
