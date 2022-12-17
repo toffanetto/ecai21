@@ -112,7 +112,7 @@ class FeedbackLinearizationControl : public rclcpp::Node{
 		void getLemniscatePoint(double &x, double &y);
 
 		// Função que computa a lei de controle do Feedback Linearization
-		void getFeedbackLinearizationControl(double &v, double &w, double &x, double &y, double x_dot_r, double y_dot_r);
+		void getFeedbackLinearizationControl(double &v, double &w, double &x, double &y);
 		
 		rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr cmd_pub;
 		rclcpp::Publisher<visualization_msgs::msg::Marker>::SharedPtr curve_pub;
@@ -151,14 +151,25 @@ void FeedbackLinearizationControl::getLemniscatePoint(double &x, double &y){
 
 ///////////////////////////////////////////////////////////////////////////////////
 // Function compute the control action from the Feedback Linearization Control Law
-void FeedbackLinearizationControl::getFeedbackLinearizationControl(double &v, double &w, double &x, double &y, double x_dot_r, double y_dot_r){
+void FeedbackLinearizationControl::getFeedbackLinearizationControl(double &v, double &w, double &x, double &y){
+	double x_dot_r = 0.5, y_dot_r = 0.5;
+
+	if(x_old == 0 && y_old == 0){
+		x_old = x;
+		y_old = y;
+	}
+	else{
+		x_dot_r = (x - x_old)/20e-3;
+		y_dot_r = (y - y_old)/20e-3;
+		x_old = x;
+		y_old = y;
+	}
+
 	double u1 = x_dot_r + K*(x - robot_point.x);
 	double u2 = y_dot_r + K*(y - robot_point.y);
 
 	v = cos(robot_orientation.yaw)*u1 + sin(robot_orientation.yaw)*u2;
 	w = -sin(robot_orientation.yaw)/D*u1 + cos(robot_orientation.yaw)/D*u2;
-
-	
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -170,23 +181,11 @@ void FeedbackLinearizationControl::cmd_timer_callback(){
 
 	auto cmd_msg = std::make_unique<geometry_msgs::msg::Twist>();
 
-		double v, w, x, y, x_dot_r = 0.5, y_dot_r = 0.5;
+		double v, w, x, y;
 
 		getLemniscatePoint(x,y);
 
-		if(x_old == 0 && y_old == 0){
-			x_old = x;
-			y_old = y;
-		}
-		else{
-			x_dot_r = (x - x_old)/20e-3;
-			y_dot_r = (y - y_old)/20e-3;
-			x_old = x;
-			y_old = y;
-		std::cout << "///////"<< std::endl;
-		}
-
-		getFeedbackLinearizationControl(v,w,x,y,x_dot_r,y_dot_r);
+		getFeedbackLinearizationControl(v,w,x,y);
 
 		cmd_msg->linear.x = (abs(v) > LINEAR_SPEED_MAX) ? copysign(LINEAR_SPEED_MAX,v) : v;
 		cmd_msg->angular.z = (abs(w) > ANGULAR_SPEED_MAX) ? copysign(ANGULAR_SPEED_MAX,w) : w;
@@ -205,7 +204,6 @@ void FeedbackLinearizationControl::cmd_timer_callback(){
 				  << "w: " << w << std::endl
 				  << "theta: " << robot_orientation.yaw << std::endl
 				  << "++++++++++++++++"<< std::endl;
-
 
 	}
 	else
