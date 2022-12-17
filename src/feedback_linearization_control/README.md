@@ -1,6 +1,6 @@
-# Exercício 6 - Potential Field Control 
+# Exercício 7 - Feedback Linearization Control 
 
-Implementação em C++ da estratégia de navegação de Campos Potênciais, utilizando odometria e LiDAR de 180°.
+Implementação em C++ da estratégia de controle Feedback Linearization, utilizando odometria e LiDAR de 180°.
 
 ## Diretórios e Arquivos
 
