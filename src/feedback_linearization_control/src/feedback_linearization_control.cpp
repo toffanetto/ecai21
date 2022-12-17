@@ -1,5 +1,5 @@
 // @toffanetto
-// 						  Exercício 6 -- Potential Field
+// 					  Exercício 7 -- Feedback Linearization
 // Autor: Gabriel Toffanetto França da Rocha
 // Professor: André Chaves Magalhâes
 // Federal University of Itajubá
