@@ -1,8 +1,8 @@
-colcon build --packages-select potential_field_control
+colcon build --packages-select feedback_linearization_control
 
 source /usr/share/gazebo/setup.sh 
 
 source ./install/setup.zsh
 
-ros2 launch potential_field_control potential_field_control.py
+ros2 launch feedback_linearization_control feedback_linearization_control.py
 
