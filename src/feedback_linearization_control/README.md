@@ -1,6 +1,6 @@
 # Exercício 7 - Feedback Linearization Control 
 
-Implementação em C++ da estratégia de controle Feedback Linearization, utilizando odometria e LiDAR de 180°.
+Implementação em C++ da estratégia de controle Feedback Linearization, utilizando odometria.
 
 ## Diretórios e Arquivos
 
